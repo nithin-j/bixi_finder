@@ -1,0 +1,2 @@
+rootProject.name='BixiFinder'
+include ':app'
