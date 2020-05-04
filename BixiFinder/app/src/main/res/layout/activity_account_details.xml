@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AccountDetailsActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/primary_dark"
+        app:liftOnScroll="true"
+        app:layout_row="0">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/main_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/layout_grid"
+        android:layout_width="351dp"
+        android:layout_height="411dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.212">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/string_full_name"
+            app:boxBackgroundColor="@color/white"
+            app:layout_column="0"
+            app:layout_row="0">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/string_address"
+            app:boxBackgroundColor="@color/white"
+            app:layout_column="0"
+            app:layout_row="1">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top|start"
+                android:inputType="textMultiLine"
+                android:maxLines="5"
+                android:minLines="4" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/string_dob"
+            app:boxBackgroundColor="@color/white"
+            app:layout_column="0"
+            app:layout_row="2">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="date" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:paddingStart="10sp"
+            android:text="Gender"
+            android:textSize="16sp"
+            app:layout_column="0"
+            app:layout_row="3"
+            tools:ignore="RtlSymmetry" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Grnder"
+            app:layout_column="0"
+            app:layout_row="3">
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/spinner_gender"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:entries="@array/array_gender"
+                android:paddingStart="4sp"
+                tools:layout_editor_absoluteX="1dp"
+                tools:layout_editor_absoluteY="168dp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:paddingStart="10sp"
+            android:text="Membership Type"
+            android:textSize="16sp"
+            app:layout_column="0"
+            app:layout_row="4"
+            tools:ignore="RtlSymmetry" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Grnder"
+            app:layout_column="0"
+            app:layout_row="4">
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/spinner_member_type"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:entries="@array/array_membership"
+                android:paddingStart="4sp"
+                tools:layout_editor_absoluteX="1dp"
+                tools:layout_editor_absoluteY="168dp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_Login"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/string_register"
+            android:textAllCaps="false"
+            android:textColor="@color/primary_text"
+            android:textSize="25sp"
+            app:cornerRadius="10dp"
+            app:layout_column="0"
+            app:layout_gravity="right"
+            app:layout_row="6" />
+
+
+    </androidx.gridlayout.widget.GridLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

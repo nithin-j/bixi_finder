@@ -1,3 +1,29 @@
 <resources>
     <string name="app_name">BixiFinder</string>
+    <string name="string_email">email</string>
+    <string name="string_password">password</string>
+    <string name="string_password_reset">forgot password?</string>
+    <string name="string_forgot_password">forgot password?</string>
+    <string name="sting_login">Login</string>
+    <string name="string_confirm_password">confirm password</string>
+    <string name="string_next">Next</string>
+    <string name="string_register">Register</string>
+    <string name="string_full_name">full name</string>
+    <string name="string_address">address</string>
+    <string name="string_dob">DOB</string>
+
+    <string-array name="array_gender">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Others</item>
+    </string-array>
+
+    <string-array name="array_membership">
+        <item>$2.99: One Way Pass</item>
+        <item>$5.25: One DayPass</item>
+        <item>$97: One Year Pass</item>
+        <item>$36: One Month Pass</item>
+    </string-array>
+
+
 </resources>
