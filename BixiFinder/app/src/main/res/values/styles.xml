@@ -11,6 +11,8 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
+
+        <item name="switchStyle">@style/Widget.MaterialComponents.CompoundButton.Switch</item>
     </style>
 
     <style name="CustomActivityTheme" parent="AppTheme.NoTitleBar">

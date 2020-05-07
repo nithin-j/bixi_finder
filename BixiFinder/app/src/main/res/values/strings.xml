@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">BixiFinder</string>
+    <string name="app_title">Bixi Finder</string>
+    <string name="mapbox_access_token">pk.eyJ1Ijoiam95LW1hcGJveCIsImEiOiJjazl3NzgybTIwNzFnM2Vxano5MHk0NWlxIn0.eW53y8KGON3kTqVv-WB6Xg</string>
+
     <string name="string_email">email</string>
     <string name="string_password">password</string>
     <string name="string_password_reset">forgot password?</string>
