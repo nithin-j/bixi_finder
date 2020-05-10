@@ -14,6 +14,7 @@
     <string name="string_full_name">full name</string>
     <string name="string_address">address</string>
     <string name="string_dob">DOB</string>
+    <string name="string_pin_code">pin code</string>
 
     <string-array name="array_gender">
         <item>Male</item>

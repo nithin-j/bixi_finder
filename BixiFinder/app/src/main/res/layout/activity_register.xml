@@ -40,6 +40,7 @@
             app:layout_row="0">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tv_Email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -53,6 +54,7 @@
             app:layout_row="1">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tv_Password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"/>
@@ -67,6 +69,7 @@
             app:layout_row="2">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tv_Confirm_Password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"/>

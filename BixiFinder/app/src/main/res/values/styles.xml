@@ -19,4 +19,8 @@
         <item name="android:homeAsUpIndicator">@drawable/ic_close_black_24dp</item>
     </style>
 
+    <style parent="@android:style/Widget.Spinner" name="CustomerSpinnerTheme">
+        <item name="android:background">@android:drawable/edit_text</item>
+    </style>
+
 </resources>

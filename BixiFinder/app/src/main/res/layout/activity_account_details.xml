@@ -7,29 +7,31 @@
     tools:context=".AccountDetailsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
-        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/primary_dark"
-        app:liftOnScroll="true"
-        app:layout_row="0">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_row="0"
+        app:liftOnScroll="true">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/main_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"/>
+            android:layout_height="?attr/actionBarSize" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/layout_grid"
         android:layout_width="351dp"
-        android:layout_height="411dp"
+        android:layout_height="575dp"
+        android:paddingBottom="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.212">
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+        app:layout_constraintVertical_bias="0.0">
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -40,6 +42,7 @@
             app:layout_row="0">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_user_full_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -53,6 +56,7 @@
             app:layout_row="1">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_user_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="top|start"
@@ -65,12 +69,28 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/string_dob"
+            android:hint="@string/string_pin_code"
             app:boxBackgroundColor="@color/white"
             app:layout_column="0"
             app:layout_row="2">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_user_zipcode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="date" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/string_dob"
+            app:boxBackgroundColor="@color/white"
+            app:layout_column="0"
+            app:layout_row="3">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_user_dob"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="date" />
@@ -81,58 +101,41 @@
             android:text="Gender"
             android:textSize="16sp"
             app:layout_column="0"
-            app:layout_row="3"
+            app:layout_row="4"
             tools:ignore="RtlSymmetry" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/spinner_gender"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Grnder"
+            android:layout_height="45dp"
+            android:paddingStart="4sp"
             app:layout_column="0"
-            app:layout_row="3">
-
-            <androidx.appcompat.widget.AppCompatSpinner
-                android:id="@+id/spinner_gender"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:entries="@array/array_gender"
-                android:paddingStart="4sp"
-                tools:layout_editor_absoluteX="1dp"
-                tools:layout_editor_absoluteY="168dp" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+            app:layout_row="5"
+            tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="168dp" />
 
         <TextView
             android:paddingStart="10sp"
             android:text="Membership Type"
             android:textSize="16sp"
             app:layout_column="0"
-            app:layout_row="4"
+            app:layout_row="6"
             tools:ignore="RtlSymmetry" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/spinner_member_type"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Grnder"
+            android:layout_height="45dp"
+            android:paddingStart="4sp"
             app:layout_column="0"
-            app:layout_row="4">
-
-            <androidx.appcompat.widget.AppCompatSpinner
-                android:id="@+id/spinner_member_type"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:entries="@array/array_membership"
-                android:paddingStart="4sp"
-                tools:layout_editor_absoluteX="1dp"
-                tools:layout_editor_absoluteY="168dp" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
+            app:layout_row="7"
+            tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="168dp" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_Login"
+            android:id="@+id/button_register"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -143,7 +146,7 @@
             app:cornerRadius="10dp"
             app:layout_column="0"
             app:layout_gravity="right"
-            app:layout_row="6" />
+            app:layout_row="9" />
 
 
     </androidx.gridlayout.widget.GridLayout>

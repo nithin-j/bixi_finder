@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "951566254064",
+    "firebase_url": "https://pjbixifinder.firebaseio.com",
+    "project_id": "pjbixifinder",
+    "storage_bucket": "pjbixifinder.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:951566254064:android:b4728e63f93d805d592735",
+        "android_client_info": {
+          "package_name": "com.example.bixifinder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "951566254064-pfjodkcedbnc1s9aneq48fuun7r9bgam.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5Bw3-654UEEbSiYKjJ8wK0jZuU6CWBtM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "951566254064-pfjodkcedbnc1s9aneq48fuun7r9bgam.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
