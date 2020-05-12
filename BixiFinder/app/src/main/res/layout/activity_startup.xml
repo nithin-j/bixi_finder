@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="541dp"
         android:background="@drawable/startup"
+        android:backgroundTint="@color/secondary_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.2"
@@ -72,6 +73,7 @@
 
 
         </androidx.gridlayout.widget.GridLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

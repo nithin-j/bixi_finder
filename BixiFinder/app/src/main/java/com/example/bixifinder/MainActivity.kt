@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity(), PermissionsListener, LocationEngineLis
 
     private fun setCameraPosition(location: Location){
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(
-            LatLng(location.latitude, location.longitude), 13.0))
+            LatLng(location.latitude, location.longitude), 17.0))
     }
 
     override fun onExplanationNeeded(permissionsToExplain: MutableList<String>?) {

@@ -1,10 +1,12 @@
 package com.example.bixifinder
 
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ArrayAdapter
+import androidx.annotation.RequiresApi
 import com.example.bixifinder.dbContext.AccountDetails
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -17,6 +19,7 @@ class AccountDetailsActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account_details)
@@ -44,6 +47,7 @@ class AccountDetailsActivity : AppCompatActivity() {
         spinner_member_type.adapter = typeSpinner
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun initialize() {
         setSupportActionBar(main_toolbar)
 
@@ -56,6 +60,7 @@ class AccountDetailsActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun registerNewUser() {
 
         val user = FirebaseAuth.getInstance().currentUser?.uid.toString()
@@ -96,6 +101,10 @@ class AccountDetailsActivity : AppCompatActivity() {
 
         val users = AccountDetails(id, name, address, zip, dob, gender, type, "Valid", date)
         userReference.child(name).setValue(users)
+
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

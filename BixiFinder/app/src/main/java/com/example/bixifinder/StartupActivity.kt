@@ -20,15 +20,17 @@ class StartupActivity : AppCompatActivity() {
         button_load_maps.setOnClickListener{
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent);
+            finish()
         }
         button_load_login.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent);
+            finish()
         }
         button_load_register.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent);
+            finish()
         }
-
     }
 }

@@ -32,11 +32,7 @@ class RegisterActivity : AppCompatActivity()  {
         auth = FirebaseAuth.getInstance()
 
         button_Next.setOnClickListener{
-
-
             signUp(tv_Email.text.toString(),tv_Password.text.toString())
-
-
         }
     }
 
@@ -68,7 +64,7 @@ class RegisterActivity : AppCompatActivity()  {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val intent = Intent(this, AccountDetailsActivity::class.java)
-                    startActivity(intent);
+                    startActivity(intent)
                     finish()
                 } else {
                     // If sign in fails, display a message to the user.
