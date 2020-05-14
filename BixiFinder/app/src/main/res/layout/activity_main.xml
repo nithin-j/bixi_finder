@@ -17,18 +17,18 @@
 
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/mapView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         mapbox:mapbox_cameraTargetLat="45.5017"
         mapbox:mapbox_cameraTargetLng="-73.5673"
-        mapbox:mapbox_styleUrl="mapbox://styles/mapbox/streets-v10"
-        mapbox:mapbox_cameraZoom="17">
+        mapbox:mapbox_cameraZoom="15">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <ImageView
+                android:id="@+id/imageView"
                 android:layout_width="130dp"
                 android:layout_height="82dp"
                 android:src="@drawable/bixifinderwords"
@@ -43,62 +43,80 @@
                 android:id="@+id/fabMenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="192dp"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/primary_light"
                 android:src="@drawable/ic_menu_24px"
-                mapbox:layout_constraintEnd_toEndOf="parent"
-                mapbox:layout_constraintHorizontal_bias="0.098"
+                mapbox:fabSize="mini"
+                mapbox:layout_constraintBottom_toBottomOf="parent"
+                mapbox:layout_constraintEnd_toStartOf="@+id/fabSearch"
+                mapbox:layout_constraintHorizontal_bias="0.053"
                 mapbox:layout_constraintStart_toStartOf="parent"
-                mapbox:layout_constraintTop_toTopOf="parent" />
+                mapbox:layout_constraintTop_toTopOf="parent"
+                mapbox:layout_constraintVertical_bias="0.023"
+                mapbox:rippleColor="@color/primary" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fabSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="592dp"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/primary_light"
                 android:src="@drawable/ic_search_24px"
-                mapbox:layout_constraintBottom_toTopOf="@+id/switchDarkLight"
+                mapbox:fabSize="mini"
+                mapbox:layout_constraintBottom_toBottomOf="parent"
                 mapbox:layout_constraintEnd_toEndOf="parent"
-                mapbox:layout_constraintTop_toTopOf="@+id/fabRefresh"
-                mapbox:layout_constraintVertical_bias="0.0" />
-
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/switchBikeDock"
-                android:layout_width="wrap_content"
-                android:layout_height="43dp"
-                android:layout_marginTop="8dp"
-                mapbox:layout_constraintEnd_toStartOf="@+id/fabRefresh"
-                mapbox:layout_constraintHorizontal_bias="0.108"
-                mapbox:layout_constraintStart_toStartOf="parent"
-                mapbox:layout_constraintTop_toBottomOf="@+id/fabMenu" />
+                mapbox:layout_constraintTop_toTopOf="parent"
+                mapbox:layout_constraintVertical_bias="0.103"
+                mapbox:rippleColor="@color/primary" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fabRefresh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="592dp"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/primary_light"
                 android:src="@drawable/ic_refresh_24px"
-                mapbox:layout_constraintBottom_toTopOf="@+id/switchDarkLight"
-                mapbox:layout_constraintEnd_toStartOf="@+id/fabSearch"
-                mapbox:layout_constraintHorizontal_bias="0.978"
-                mapbox:layout_constraintStart_toStartOf="parent"
-                mapbox:layout_constraintTop_toTopOf="@+id/fabMenu"
-                mapbox:layout_constraintVertical_bias="0.0" />
-
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/switchDarkLight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
+                mapbox:fabSize="mini"
                 mapbox:layout_constraintBottom_toBottomOf="parent"
                 mapbox:layout_constraintEnd_toEndOf="parent"
-                mapbox:useMaterialThemeColors="true"/>
+                mapbox:layout_constraintHorizontal_bias="0.946"
+                mapbox:layout_constraintStart_toEndOf="@+id/fabMenu"
+                mapbox:layout_constraintTop_toBottomOf="@+id/fabSearch"
+                mapbox:layout_constraintVertical_bias="0.0"
+                mapbox:rippleColor="@color/primary" />
+
+            <com.getbase.floatingactionbutton.FloatingActionsMenu
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                mapbox:fab_addButtonColorNormal="@color/primary_light"
+                mapbox:fab_addButtonColorPressed="@color/primary"
+                mapbox:fab_addButtonPlusIconColor="#000000"
+                mapbox:fab_addButtonSize="mini"
+                mapbox:fab_expandDirection="up"
+                mapbox:layout_constraintBottom_toBottomOf="parent"
+                mapbox:layout_constraintEnd_toEndOf="parent"
+                mapbox:layout_constraintHorizontal_bias="0.957"
+                mapbox:layout_constraintStart_toStartOf="parent"
+                mapbox:layout_constraintTop_toBottomOf="@+id/fabRefresh"
+                mapbox:layout_constraintVertical_bias="0.969">
+
+                <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab_light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    mapbox:fab_size="mini"
+                    mapbox:fab_colorNormal="@color/white"
+                    mapbox:fab_colorPressed="@color/primary"
+                    mapbox:fab_icon="@drawable/ic_map_theme_light"/>
+
+                <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab_dark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    mapbox:fab_size="mini"
+                    mapbox:fab_colorNormal="@color/white"
+                    mapbox:fab_colorPressed="@color/primary"
+                    mapbox:fab_icon="@drawable/ic_map_theme_dark"/>
+
+            </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
