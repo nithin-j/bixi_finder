@@ -100,7 +100,7 @@ class AccountDetailsActivity : AppCompatActivity() {
         val date = LocalDate.now().toString()
 
         val users = AccountDetails(id, name, address, zip, dob, gender, type, "Valid", date)
-        userReference.child(name).setValue(users)
+        userReference.setValue(users)
 
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)

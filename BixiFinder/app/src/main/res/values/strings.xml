@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">BixiFinder</string>
     <string name="app_title">Bixi Finder</string>
-    <string name="mapbox_access_token">pk.eyJ1Ijoiam95LW1hcGJveCIsImEiOiJjazl3NzgybTIwNzFnM2Vxano5MHk0NWlxIn0.eW53y8KGON3kTqVv-WB6Xg</string>
+    <string name="mapbox_access_token">pk.eyJ1Ijoiam95LW1hcGJveCIsImEiOiJjazl3NzhyNW0wNzFuM2VxajU2ZnAxZ3F2In0.zriMLeOFSGpbb7hnbr_3nA</string>
     <string name="user_location_permission_explanation">Location is required for the application to work properly. Please goto settings and enable location services</string>
 
     <string name="string_email">email</string>
