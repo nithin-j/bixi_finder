@@ -1,45 +1,49 @@
 package com.example.bixifinder
 
 import android.annotation.SuppressLint
-import android.graphics.Paint
-import android.graphics.RenderNode
-import android.location.Location
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.drawable.Drawable
+import android.os.AsyncTask
 import android.os.Bundle
-import android.os.LocaleList
-import android.os.PersistableBundle
 import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.example.bixifinder.model.BixiStationInfo
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.geojson.Point
 import com.mapbox.geojson.Polygon
 import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.annotations.IconFactory
+import com.mapbox.mapboxsdk.annotations.MarkerOptions
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.LocationComponentOptions
 import com.mapbox.mapboxsdk.location.modes.CameraMode
 import com.mapbox.mapboxsdk.location.modes.RenderMode
-import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.style.layers.FillLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import kotlinx.android.synthetic.main.activity_main.*
+import org.json.JSONObject
+import java.net.HttpURLConnection
+import java.net.URL
 
 class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback {
 
     private var permissionsManager: PermissionsManager = PermissionsManager(this)
     private lateinit var mapboxMap: MapboxMap
 
+
+
     //to set the map boundries
-    private val BOUND_CORNER_NW = LatLng(45.5505849, -73.60223174)
-    private val BOUND_CORNER_SE = LatLng(45.5505849, -73.60223174)
+    private val BOUND_CORNER_NW = LatLng(45.86352447, -73.65357972)
+    private val BOUND_CORNER_SE = LatLng(45.24738588, -73.47045137)
     private val RESTRICTED_BOUNDS_AREA = LatLngBounds.Builder()
         .include(BOUND_CORNER_NW)
         .include(BOUND_CORNER_SE)
@@ -53,6 +57,9 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
         Mapbox.getInstance(applicationContext,getString(R.string.mapbox_access_token))
         setContentView(R.layout.activity_main)
 
+        val url = "https://api-core.bixi.com/gbfs/en/station_information.json"
+        AssyncTaskHandler().execute(url)
+
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
 
@@ -65,11 +72,82 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
 
     }
 
+    inner class AssyncTaskHandler:AsyncTask<String,String,String>(){
+
+
+        override fun onPreExecute() {
+            super.onPreExecute()
+        }
+
+        override fun doInBackground(vararg url: String?): String {
+            val result:String
+            val connection = URL(url[0]).openConnection() as HttpURLConnection
+            try{
+               connection.connect()
+                result = connection.inputStream.use {
+                    it.reader().use {
+                        reader -> reader.readText()
+                    }
+                }
+            }
+            finally {
+                connection.disconnect()
+            }
+            return result
+        }
+
+        override fun onPostExecute(result: String?) {
+            super.onPostExecute(result)
+            manageStationJSON(result)
+        }
+
+        private fun manageStationJSON(jsonString: String?){
+
+            var jsonObject = JSONObject(jsonString)
+            jsonObject = jsonObject.getJSONObject("data")
+            val jsonStationArray = jsonObject.getJSONArray("stations")
+            val listOfStations = ArrayList<BixiStationInfo>()
+            var i = 0
+
+            while (i<jsonStationArray.length()){
+                val jsonStationObject = jsonStationArray.getJSONObject(i)
+                listOfStations.add(
+                    BixiStationInfo(
+                        jsonStationObject.getInt("station_id"),
+                        jsonStationObject.getString("external_id"),
+                        jsonStationObject.getString("name"),
+                        jsonStationObject.getInt("short_name"),
+                        jsonStationObject.getDouble("lat"),
+                        jsonStationObject.getDouble("lon"),
+                        jsonStationObject.getInt("capacity"),
+                        jsonStationObject.getBoolean("electric_bike_surcharge_waiver"),
+                        jsonStationObject.getBoolean("eightd_has_key_dispenser")
+                    )
+                )
+
+                i++
+            }
+            i = 0
+            while (i<listOfStations.size){
+                mapboxMap.addMarker(
+                    MarkerOptions().
+                    position(LatLng(listOfStations[i].latitude,listOfStations[i].longitude)).
+                    title(listOfStations[i].name).
+                    icon(IconFactory.getInstance(this@MainActivity).fromResource(R.drawable.pin))
+                )
+                i++
+            }
+
+        }
+
+    }
+
+
     override fun onMapReady(mapboxMap: MapboxMap) {
         this.mapboxMap = mapboxMap
         mapboxMap.setStyle(Style.TRAFFIC_DAY){
             mapboxMap.setLatLngBoundsForCameraTarget(RESTRICTED_BOUNDS_AREA)
-            mapboxMap.setMinZoomPreference(5.0)
+            mapboxMap.setMinZoomPreference(8.0)
             showBoundArea(it)
             showCrossHair()
             enableLocationComponent(it)
