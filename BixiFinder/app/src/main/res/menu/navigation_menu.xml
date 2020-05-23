@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_update_account"
+        android:title="@string/menu_manage_account"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_account_circle_black_24dp"/>
+    <item
+        android:id="@+id/menu_update_pass"
+        android:title="@string/menu_update_pass"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_account_circle_black_24dp"/>
+    <item
+        android:id="@+id/menu_terms"
+        android:title="@string/menu_terms_of_use"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_account_circle_black_24dp"/>
+    <item
+        android:id="@+id/menu_learn"
+        android:title="@string/menu_learn_more_about_bixi"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_account_circle_black_24dp"/>
+    <item
+        android:id="@+id/menu_rate_bixi"
+        android:title="@string/menu_rate_bixifinder"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_account_circle_black_24dp"/>
+    <item
+        android:id="@+id/menu_user_ratings"
+        android:title="@string/menu_see_user_ratings"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_account_circle_black_24dp"/>
+    <item
+        android:id="@+id/menu_login"
+        android:title="@string/menu_login"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_account_circle_black_24dp"/>
+    <item
+        android:id="@+id/menu_logout"
+        android:title="@string/menu_logout"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_account_circle_black_24dp"/>
+
+</menu>

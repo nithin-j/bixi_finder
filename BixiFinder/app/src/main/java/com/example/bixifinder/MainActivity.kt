@@ -5,12 +5,15 @@ import android.graphics.drawable.Drawable
 import android.os.AsyncTask
 import android.os.Bundle
 import android.view.Gravity
+import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.bixifinder.model.BixiStationInfo
+import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.geojson.Point
@@ -30,11 +33,14 @@ import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.style.layers.FillLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.view.*
+import kotlinx.android.synthetic.main.navigation_header.*
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
 
-class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback {
+class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback,
+    NavigationView.OnNavigationItemSelectedListener {
 
     private var permissionsManager: PermissionsManager = PermissionsManager(this)
     private lateinit var mapboxMap: MapboxMap
@@ -52,13 +58,11 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
     private val points:List<List<Point>> = mutableListOf()
     private val outerPoints:List<Point> = mutableListOf()
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Mapbox.getInstance(applicationContext,getString(R.string.mapbox_access_token))
         setContentView(R.layout.activity_main)
-
-        val url = "https://api-core.bixi.com/gbfs/en/station_information.json"
-        AssyncTaskHandler().execute(url)
 
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
@@ -68,6 +72,39 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
         }
         fab_light.setOnClickListener {
             mapboxMap.setStyle(Style.TRAFFIC_DAY)
+        }
+
+        val url = "https://api-core.bixi.com/gbfs/en/station_information.json"
+        AssyncTaskHandler().execute(url)
+
+        val user = FirebaseAuth.getInstance().currentUser
+
+
+
+        navigation.bringToFront()
+        navigation.setNavigationItemSelectedListener(this)
+
+        val currentMenu = navigation.menu
+        if(user != null){
+            Toast.makeText(this,user?.email,Toast.LENGTH_SHORT).show()
+            currentMenu.findItem(R.id.menu_update_account).isVisible = true
+            currentMenu.findItem(R.id.menu_update_pass).isVisible = true
+            currentMenu.findItem(R.id.menu_rate_bixi).isVisible = true
+            currentMenu.findItem(R.id.menu_login).isVisible = false
+            currentMenu.findItem(R.id.menu_logout).isVisible = true
+        }
+        else{
+            Toast.makeText(this,"Not logged in",Toast.LENGTH_SHORT).show()
+            currentMenu.findItem(R.id.menu_update_account).isVisible = false
+            currentMenu.findItem(R.id.menu_update_pass).isVisible = false
+            currentMenu.findItem(R.id.menu_rate_bixi).isVisible = false
+            currentMenu.findItem(R.id.menu_login).isVisible = true
+            currentMenu.findItem(R.id.menu_logout).isVisible = false
+        }
+
+
+        fabMenu.setOnClickListener {
+            drawer_layout.openDrawer(Gravity.LEFT)
         }
 
     }
@@ -132,8 +169,7 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
                 mapboxMap.addMarker(
                     MarkerOptions().
                     position(LatLng(listOfStations[i].latitude,listOfStations[i].longitude)).
-                    title(listOfStations[i].name).
-                    icon(IconFactory.getInstance(this@MainActivity).fromResource(R.drawable.pin))
+                    title(listOfStations[i].name)
                 )
                 i++
             }
@@ -262,6 +298,26 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         mapView.onSaveInstanceState(outState)
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        val user = FirebaseAuth.getInstance().currentUser
+
+        when (item.itemId){
+            R.id.menu_learn ->
+                Toast.makeText(this, "Learn more about bixi", Toast.LENGTH_SHORT).show()
+            R.id.menu_logout ->
+                if( user?.uid != null){
+                    Toast.makeText(this,user.email,Toast.LENGTH_SHORT).show()
+                    FirebaseAuth.getInstance().signOut()
+                }
+                else{
+                    Toast.makeText(this, "no user is logged.", Toast.LENGTH_SHORT).show()
+                }
+
+        }
+    drawer_layout.closeDrawer(Gravity.LEFT)
+        return true
     }
 
 
