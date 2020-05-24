@@ -48,6 +48,7 @@
                 android:backgroundTint="@color/primary_light"
                 android:src="@drawable/ic_menu_24px"
                 mapbox:fabSize="mini"
+                
                 mapbox:layout_constraintBottom_toBottomOf="parent"
                 mapbox:layout_constraintEnd_toStartOf="@+id/fabSearch"
                 mapbox:layout_constraintHorizontal_bias="0.053"

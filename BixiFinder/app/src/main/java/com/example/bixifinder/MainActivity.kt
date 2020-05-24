@@ -1,6 +1,7 @@
 package com.example.bixifinder
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.AsyncTask
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import com.example.bixifinder.model.BixiStationInfo
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -32,6 +34,7 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.style.layers.FillLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
+import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.navigation_header.*
@@ -40,7 +43,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback,
-    NavigationView.OnNavigationItemSelectedListener {
+    NavigationView.OnNavigationItemSelectedListener{
 
     private var permissionsManager: PermissionsManager = PermissionsManager(this)
     private lateinit var mapboxMap: MapboxMap
@@ -66,6 +69,7 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
 
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
+
 
         fab_dark.setOnClickListener {
             mapboxMap.setStyle(Style.TRAFFIC_NIGHT)
@@ -166,12 +170,18 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
             }
             i = 0
             while (i<listOfStations.size){
-                mapboxMap.addMarker(
-                    MarkerOptions().
-                    position(LatLng(listOfStations[i].latitude,listOfStations[i].longitude)).
-                    title(listOfStations[i].name)
-                )
-                i++
+
+                try {
+                    mapboxMap.addMarker(
+                        MarkerOptions().
+                        position(LatLng(listOfStations[i].latitude,listOfStations[i].longitude)).
+                        title(listOfStations[i].name)
+                    )
+                    i++
+                }catch (exception: Exception){
+                    Toast.makeText(this@MainActivity,"There was an unknown error\nPlease contact support",Toast.LENGTH_SHORT).show()
+                }
+
             }
 
         }
@@ -304,20 +314,35 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
         val user = FirebaseAuth.getInstance().currentUser
 
         when (item.itemId){
+            R.id.menu_update_account ->
+                Toast.makeText(this, "Manage Account will showup here", Toast.LENGTH_SHORT).show()
+            R.id.menu_update_pass ->
+                Toast.makeText(this, "Update pass will appear here", Toast.LENGTH_SHORT).show()
+            R.id.menu_terms ->
+                Toast.makeText(this, "Terms of use will appear here", Toast.LENGTH_SHORT).show()
             R.id.menu_learn ->
                 Toast.makeText(this, "Learn more about bixi", Toast.LENGTH_SHORT).show()
+            R.id.menu_rate_bixi ->
+                Toast.makeText(this, "Rate our application here", Toast.LENGTH_SHORT).show()
+            R.id.menu_user_ratings ->
+                Toast.makeText(this, "Users can rate bixi finder here", Toast.LENGTH_SHORT).show()
+            R.id.menu_login ->
+                if( user?.uid == null){
+                    val intent = Intent(this, LoginActivity::class.java)
+                    intent.putExtra("layout","main")
+                    startActivity(intent)
+                }
             R.id.menu_logout ->
                 if( user?.uid != null){
-                    Toast.makeText(this,user.email,Toast.LENGTH_SHORT).show()
                     FirebaseAuth.getInstance().signOut()
+                    val intent = Intent(this, MainActivityLoader::class.java)
+                    intent.putExtra("layout","main")
+                    startActivity(intent)
                 }
-                else{
-                    Toast.makeText(this, "no user is logged.", Toast.LENGTH_SHORT).show()
-                }
-
         }
     drawer_layout.closeDrawer(Gravity.LEFT)
-        return true
+
+    return true
     }
 
 

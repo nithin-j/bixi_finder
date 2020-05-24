@@ -32,6 +32,7 @@ class StartupActivity : AppCompatActivity() {
         }
         button_load_login.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
+            intent.putExtra("layout","startup")
             startActivity(intent);
             finish()
         }

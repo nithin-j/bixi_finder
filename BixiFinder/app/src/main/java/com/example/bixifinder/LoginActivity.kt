@@ -71,9 +71,16 @@ class LoginActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val layout = intent.getStringExtra("layout")
 
-        val intent = Intent(this, StartupActivity::class.java)
-        startActivity(intent);
+        if (layout.toLowerCase().equals("main")){
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+        else {
+            val intent = Intent(this, StartupActivity::class.java)
+            startActivity(intent);
+        }
         return super.onOptionsItemSelected(item)
     }
 }
