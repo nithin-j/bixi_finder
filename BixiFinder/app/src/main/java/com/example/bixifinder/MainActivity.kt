@@ -2,7 +2,6 @@ package com.example.bixifinder
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.os.AsyncTask
 import android.os.Bundle
 import android.view.Gravity
@@ -12,16 +11,23 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.drawerlayout.widget.DrawerLayout
+import com.example.bixifinder.dbContext.AccountDetails
 import com.example.bixifinder.model.BixiStationInfo
+import com.google.android.material.internal.ContextUtils.getActivity
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.geojson.Point
 import com.mapbox.geojson.Polygon
 import com.mapbox.mapboxsdk.Mapbox
-import com.mapbox.mapboxsdk.annotations.IconFactory
+import com.mapbox.mapboxsdk.annotations.Marker
 import com.mapbox.mapboxsdk.annotations.MarkerOptions
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.geometry.LatLngBounds
@@ -34,10 +40,8 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.style.layers.FillLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
-import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.view.*
-import kotlinx.android.synthetic.main.navigation_header.*
+import kotlinx.android.synthetic.main.navigation_header.view.*
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
@@ -73,38 +77,34 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
 
         fab_dark.setOnClickListener {
             mapboxMap.setStyle(Style.TRAFFIC_NIGHT)
+            fab_theme.collapse()
+            Snackbar.make(it, "Dark Theme fo Map", Snackbar.LENGTH_SHORT)
+                .show();
         }
         fab_light.setOnClickListener {
             mapboxMap.setStyle(Style.TRAFFIC_DAY)
+            fab_theme.collapse()
+            Snackbar.make(it, "Light Theme fo Map", Snackbar.LENGTH_SHORT)
+                .show();
         }
 
-        val url = "https://api-core.bixi.com/gbfs/en/station_information.json"
-        AssyncTaskHandler().execute(url)
+        val stationInfoUrl = "https://api-core.bixi.com/gbfs/en/station_information.json"
+        val stationStatusUrl = "https://api-core.bixi.com/gbfs/en/station_status.json"
+        //val url = "https://api-core.bixi.com/gbfs/gbfs.json"
+        AssyncTaskHandler().execute(stationInfoUrl,stationStatusUrl)
 
-        val user = FirebaseAuth.getInstance().currentUser
+        fabRefresh.setOnClickListener {
+            AssyncTaskHandler().execute(stationInfoUrl, stationStatusUrl)
+            Snackbar.make(it, "Bixis Refreshed", Snackbar.LENGTH_SHORT)
+                .show();
+        }
 
-
+        manageNavigationDrawer()
 
         navigation.bringToFront()
         navigation.setNavigationItemSelectedListener(this)
 
-        val currentMenu = navigation.menu
-        if(user != null){
-            Toast.makeText(this,user?.email,Toast.LENGTH_SHORT).show()
-            currentMenu.findItem(R.id.menu_update_account).isVisible = true
-            currentMenu.findItem(R.id.menu_update_pass).isVisible = true
-            currentMenu.findItem(R.id.menu_rate_bixi).isVisible = true
-            currentMenu.findItem(R.id.menu_login).isVisible = false
-            currentMenu.findItem(R.id.menu_logout).isVisible = true
-        }
-        else{
-            Toast.makeText(this,"Not logged in",Toast.LENGTH_SHORT).show()
-            currentMenu.findItem(R.id.menu_update_account).isVisible = false
-            currentMenu.findItem(R.id.menu_update_pass).isVisible = false
-            currentMenu.findItem(R.id.menu_rate_bixi).isVisible = false
-            currentMenu.findItem(R.id.menu_login).isVisible = true
-            currentMenu.findItem(R.id.menu_logout).isVisible = false
-        }
+
 
 
         fabMenu.setOnClickListener {
@@ -113,6 +113,65 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
 
     }
 
+    private fun manageNavigationDrawer() {
+
+        val user = FirebaseAuth.getInstance().currentUser
+        val currentMenu = navigation.menu
+        manageHeader(user)
+        if(user != null){
+
+            currentMenu.findItem(R.id.menu_update_account).isVisible = true
+            currentMenu.findItem(R.id.menu_update_pass).isVisible = true
+            currentMenu.findItem(R.id.menu_rate_bixi).isVisible = true
+            currentMenu.findItem(R.id.menu_login).isVisible = false
+            currentMenu.findItem(R.id.menu_logout).isVisible = true
+        }
+        else{
+
+            currentMenu.findItem(R.id.menu_update_account).isVisible = false
+            currentMenu.findItem(R.id.menu_update_pass).isVisible = false
+            currentMenu.findItem(R.id.menu_rate_bixi).isVisible = false
+            currentMenu.findItem(R.id.menu_login).isVisible = true
+            currentMenu.findItem(R.id.menu_logout).isVisible = false
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun manageHeader(user: FirebaseUser?) {
+
+        val currentHeader = navigation.getHeaderView(0)
+        if (user != null){
+
+            var userDetails : AccountDetails? = null
+            val uid = user?.uid.toString()
+            val userReference = FirebaseDatabase.getInstance().getReference(uid).child("AccountDetails")
+            var name: String = ""
+            lateinit var validity: String
+            val userListener = object: ValueEventListener{
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    userDetails = dataSnapshot.getValue(AccountDetails::class.java)
+                    currentHeader.tv_user_full_name.text = userDetails?.name
+                    currentHeader.tv_pass_validity.text = "Bixi Access Expires on: ${userDetails?.validUpTo}"
+                }
+            }
+            userReference.addListenerForSingleValueEvent(userListener)
+            currentHeader.tv_user_email.text = user.email
+        }
+        else{
+            currentHeader.tv_user_full_name.text = "Guest User"
+            currentHeader.tv_user_email.text = null
+            currentHeader.tv_pass_validity.text = null
+        }
+
+    }
+
+
+    @SuppressLint("StaticFieldLeak")
+    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     inner class AssyncTaskHandler:AsyncTask<String,String,String>(){
 
 
@@ -121,18 +180,36 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
         }
 
         override fun doInBackground(vararg url: String?): String {
-            val result:String
-            val connection = URL(url[0]).openConnection() as HttpURLConnection
+
+            var result:String
+            val stationInfoConn = URL(url[0]).openConnection() as HttpURLConnection
+            val stationStatusConn = URL(url[1]).openConnection() as HttpURLConnection
             try{
-               connection.connect()
-                result = connection.inputStream.use {
+                stationInfoConn.connect()
+
+
+                var tempResult = stationInfoConn.inputStream.use {
+                    it.reader().use {
+                            reader -> reader.readText()
+                    }
+                }
+
+                result = tempResult
+
+                stationStatusConn.connect()
+
+                tempResult = stationStatusConn.inputStream.use {
                     it.reader().use {
                         reader -> reader.readText()
                     }
                 }
+
+                result = "$result || $tempResult"
+
             }
             finally {
-                connection.disconnect()
+                stationInfoConn.disconnect()
+                stationStatusConn.disconnect()
             }
             return result
         }
@@ -144,7 +221,10 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
 
         private fun manageStationJSON(jsonString: String?){
 
-            var jsonObject = JSONObject(jsonString)
+            val jsonStringArray = jsonString?.split("||")?.toTypedArray()
+
+
+            var jsonObject = JSONObject(jsonStringArray?.get(0))
             jsonObject = jsonObject.getJSONObject("data")
             val jsonStationArray = jsonObject.getJSONArray("stations")
             val listOfStations = ArrayList<BixiStationInfo>()
@@ -183,6 +263,7 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
                 }
 
             }
+
 
         }
 

@@ -40,6 +40,7 @@
     <string name="menu_logout">Logout</string>
     <string name="menu_login">Login</string>
     <string name="string_user_mail">user@mail.com</string>
+    <string name="string_guest_user">Guest User</string>
 
 
 </resources>

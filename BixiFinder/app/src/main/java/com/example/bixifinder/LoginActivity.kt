@@ -77,6 +77,10 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+        else if (layout.toLowerCase().equals("account")){
+            val intent = Intent(this, StartupActivity::class.java)
+            startActivity(intent);
+        }
         else {
             val intent = Intent(this, StartupActivity::class.java)
             startActivity(intent);
