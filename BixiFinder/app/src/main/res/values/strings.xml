@@ -41,6 +41,9 @@
     <string name="menu_login">Login</string>
     <string name="string_user_mail">user@mail.com</string>
     <string name="string_guest_user">Guest User</string>
+    <string name="string_update_details">Update Details</string>
+    <string name="string_access_pass">Access Pass</string>
+    <string name="string_gender">Gender</string>
 
 
 </resources>

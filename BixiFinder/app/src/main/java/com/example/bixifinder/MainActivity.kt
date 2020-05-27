@@ -3,16 +3,19 @@ package com.example.bixifinder
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.AsyncTask
+import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.bixifinder.dbContext.AccountDetails
 import com.example.bixifinder.model.BixiStationInfo
+import com.example.bixifinder.model.BixiStationStatus
 import com.google.android.material.internal.ContextUtils.getActivity
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -22,6 +25,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.gson.JsonObject
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.geojson.Point
@@ -45,6 +49,9 @@ import kotlinx.android.synthetic.main.navigation_header.view.*
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
+import java.sql.Date
+import java.text.SimpleDateFormat
+import java.time.LocalDate
 
 class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback,
     NavigationView.OnNavigationItemSelectedListener{
@@ -74,6 +81,7 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
 
+        updateMembershipStatus()
 
         fab_dark.setOnClickListener {
             mapboxMap.setStyle(Style.TRAFFIC_NIGHT)
@@ -113,6 +121,37 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
 
     }
 
+    private fun updateMembershipStatus() {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null){
+            val userReference = FirebaseDatabase.getInstance().getReference(user?.uid.toString()).child("AccountDetails")
+
+            val userListener = object : ValueEventListener{
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+
+                @SuppressLint("SimpleDateFormat")
+                @RequiresApi(Build.VERSION_CODES.O)
+                override fun onDataChange(p0: DataSnapshot) {
+                    var userDetails = p0.getValue(AccountDetails::class.java)
+                    var dateFormatter = SimpleDateFormat("yyyy-MM-dd")
+                    var today = dateFormatter.format(Date.valueOf(LocalDate.now().toString()))//SimpleDateFormat("yyyy-MM-dd").parse(LocalDate.now().toString())
+                    var validTo = dateFormatter.format(Date.valueOf(userDetails?.validUpTo)) //SimpleDateFormat("yyyy-MM-dd").parse(userDetails?.validUpTo.toString())
+
+                    if (validTo < today)
+                        userReference.child("membershipStatus").setValue("Invalid")
+                    else
+                        userReference.child("membershipStatus").setValue("Valid")
+                }
+
+            }
+
+            userReference.addListenerForSingleValueEvent(userListener)
+
+        }
+    }
+
     private fun manageNavigationDrawer() {
 
         val user = FirebaseAuth.getInstance().currentUser
@@ -145,8 +184,6 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
             var userDetails : AccountDetails? = null
             val uid = user?.uid.toString()
             val userReference = FirebaseDatabase.getInstance().getReference(uid).child("AccountDetails")
-            var name: String = ""
-            lateinit var validity: String
             val userListener = object: ValueEventListener{
                 override fun onCancelled(p0: DatabaseError) {
 
@@ -155,7 +192,10 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     userDetails = dataSnapshot.getValue(AccountDetails::class.java)
                     currentHeader.tv_user_full_name.text = userDetails?.name
-                    currentHeader.tv_pass_validity.text = "Bixi Access Expires on: ${userDetails?.validUpTo}"
+                    if (userDetails?.membershipStatus?.toLowerCase().equals("valid"))
+                        currentHeader.tv_pass_validity.text = "Bixi access is valid up to ${userDetails?.validUpTo}"
+                    else
+                        currentHeader.tv_pass_validity.text = "Bixi access expired on ${userDetails?.validUpTo}"
                 }
             }
             userReference.addListenerForSingleValueEvent(userListener)
@@ -224,25 +264,41 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
             val jsonStringArray = jsonString?.split("||")?.toTypedArray()
 
 
-            var jsonObject = JSONObject(jsonStringArray?.get(0))
-            jsonObject = jsonObject.getJSONObject("data")
-            val jsonStationArray = jsonObject.getJSONArray("stations")
+            var jsonStationInfoObj = JSONObject(jsonStringArray?.get(0))
+            jsonStationInfoObj = jsonStationInfoObj.getJSONObject("data")
+            val jsonStationInfoArray = jsonStationInfoObj.getJSONArray("stations")
+
+            var jsonStationStatusObj = JSONObject(jsonStringArray?.get(1))
+            jsonStationStatusObj = jsonStationStatusObj.getJSONObject("data")
+            val jsonStationStatusArray = jsonStationStatusObj.getJSONArray("stations")
+
             val listOfStations = ArrayList<BixiStationInfo>()
+            var listOfBixis = ArrayList<BixiStationStatus>()
             var i = 0
 
-            while (i<jsonStationArray.length()){
-                val jsonStationObject = jsonStationArray.getJSONObject(i)
+            while (i<jsonStationInfoArray.length()){
+                val jsonStationInfoObject = jsonStationInfoArray.getJSONObject(i)
                 listOfStations.add(
                     BixiStationInfo(
-                        jsonStationObject.getInt("station_id"),
-                        jsonStationObject.getString("external_id"),
-                        jsonStationObject.getString("name"),
-                        jsonStationObject.getInt("short_name"),
-                        jsonStationObject.getDouble("lat"),
-                        jsonStationObject.getDouble("lon"),
-                        jsonStationObject.getInt("capacity"),
-                        jsonStationObject.getBoolean("electric_bike_surcharge_waiver"),
-                        jsonStationObject.getBoolean("eightd_has_key_dispenser")
+                        jsonStationInfoObject.getInt("station_id"),
+                        jsonStationInfoObject.getString("external_id"),
+                        jsonStationInfoObject.getString("name"),
+                        jsonStationInfoObject.getInt("short_name"),
+                        jsonStationInfoObject.getDouble("lat"),
+                        jsonStationInfoObject.getDouble("lon"),
+                        jsonStationInfoObject.getInt("capacity"),
+                        jsonStationInfoObject.getBoolean("electric_bike_surcharge_waiver"),
+                        jsonStationInfoObject.getBoolean("eightd_has_key_dispenser")
+                    )
+                )
+
+                val jsonStationStatusObject = jsonStationStatusArray.getJSONObject(i)
+                listOfBixis.add(
+                    BixiStationStatus(
+                        jsonStationStatusObject.getInt("station_id"),
+                        jsonStationStatusObject.getInt("num_bikes_available") - jsonStationStatusObject.getInt("num_ebikes_available"),
+                        jsonStationStatusObject.getInt("num_ebikes_available"),
+                        jsonStationStatusObject.getInt("num_docks_available")
                     )
                 )
 
@@ -250,12 +306,16 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
             }
             i = 0
             while (i<listOfStations.size){
-
+                var markerTitle = "Name: ${listOfStations[i].name}\n" +
+                        "Station ID: ${listOfBixis[i].station_id}\n" +
+                        "Number of Bikes: ${listOfBixis[i].num_bikes_available}\n" +
+                        "Number of E-Bikes: ${listOfBixis[i].num_ebikes_available}\n" +
+                        "Number of Free Docks: ${listOfBixis[i].num_docks_available}"
                 try {
                     mapboxMap.addMarker(
                         MarkerOptions().
                         position(LatLng(listOfStations[i].latitude,listOfStations[i].longitude)).
-                        title(listOfStations[i].name)
+                        title(markerTitle)
                     )
                     i++
                 }catch (exception: Exception){
@@ -395,8 +455,11 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
         val user = FirebaseAuth.getInstance().currentUser
 
         when (item.itemId){
-            R.id.menu_update_account ->
-                Toast.makeText(this, "Manage Account will showup here", Toast.LENGTH_SHORT).show()
+            R.id.menu_update_account -> {
+                val intent = Intent(this, ManageAccountActivity::class.java)
+                intent.putExtra("layout","main")
+                startActivity(intent)
+            }
             R.id.menu_update_pass ->
                 Toast.makeText(this, "Update pass will appear here", Toast.LENGTH_SHORT).show()
             R.id.menu_terms ->

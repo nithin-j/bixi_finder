@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoTitleBar">
-        <activity android:name=".MainActivityLoader"></activity>
+        <activity android:name=".ManageAccountActivity"></activity>
+        <activity android:name=".MainActivityLoader" />
         <activity
             android:name=".StartupActivity"
             android:screenOrientation="portrait"
@@ -27,12 +28,12 @@
         <activity
             android:name=".AccountDetailsActivity"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity"></activity>
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".RegisterActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CustomActivityTheme"
-            tools:ignore="LockedOrientationActivity"></activity>
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait"
@@ -41,7 +42,7 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity"></activity>
+            tools:ignore="LockedOrientationActivity" />
     </application>
 
 </manifest>
