@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.widget.ArrayAdapter
 import androidx.annotation.RequiresApi
 import com.example.bixifinder.dbContext.AccountDetails
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -27,7 +28,6 @@ class ManageAccountActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manage_account)
 
-        initializeSpinner()
         initialize()
     }
 
@@ -54,10 +54,18 @@ class ManageAccountActivity : AppCompatActivity() {
         userDetails?.address = edit_user_address.text.toString()
         userDetails?.pinCode = edit_user_zipcode.text.toString()
         userDetails?.dob = edit_user_dob.text.toString()
-        userDetails?.gender = sp_gender.selectedItem.toString()
+        if (radio_btn_female.isChecked){
+            userDetails?.gender = radio_btn_female.text.toString()
+        }
+        else
+            userDetails?.gender = radio_btn_male.text.toString()
+
 
 
         userReference.setValue(userDetails)
+
+        Snackbar.make(findViewById(android.R.id.content), "Details updated successfully", Snackbar.LENGTH_SHORT)
+            .show();
     }
 
     private fun getUserDetails(userReference: DatabaseReference) {
@@ -77,14 +85,11 @@ class ManageAccountActivity : AppCompatActivity() {
                 edit_user_dob.setText(userDetails?.dob)
                 edit_user_zipcode.setText(userDetails?.pinCode)
 
-
                 when (userDetails?.gender?.toLowerCase()){
                     "male" ->
-                        sp_gender.setSelection(0,true)
+                        radio_btn_male.isChecked = true
                     "female" ->
-                        sp_gender.setSelection(1,true)
-                    "other" ->
-                        sp_gender.setSelection(3,true)
+                        radio_btn_female.isChecked = true
                 }
             }
         }
@@ -92,24 +97,11 @@ class ManageAccountActivity : AppCompatActivity() {
     }
 
 
-    private fun initializeSpinner(){
-        val gender = arrayOf("Male","Female","Other")
-        val type = arrayOf("\$2.99: One Way Pass",
-            "\$5.25: One DayPass",
-            "\$97: One Year Pass",
-            "\$36: One Month Pass")
-
-        val genderSpinner = ArrayAdapter<String>(
-            this,R.layout.custom_spinner_item,gender
-        )
-        genderSpinner.setDropDownViewResource(R.layout.custom_spinner_item)
-        sp_gender.adapter = genderSpinner
-
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent);
+        finish()
 
         return super.onOptionsItemSelected(item)
     }

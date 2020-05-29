@@ -8,8 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-
-        <com.google.android.material.navigation.NavigationView
+    <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation"
         android:layout_width="300dp"
         android:layout_height="match_parent"
@@ -17,7 +16,13 @@
         mapbox:headerLayout="@layout/navigation_header"
         mapbox:menu="@menu/navigation_menu"/>
 
-      <com.mapbox.mapboxsdk.maps.MapView
+    <TextView
+        android:id="@+id/validity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+    <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

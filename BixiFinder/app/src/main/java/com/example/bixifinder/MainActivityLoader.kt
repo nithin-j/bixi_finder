@@ -13,6 +13,7 @@ class MainActivityLoader : AppCompatActivity() {
         if (intent.getStringExtra("layout").toString().toLowerCase().equals("main")){
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
 }

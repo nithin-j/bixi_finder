@@ -80,6 +80,7 @@ class RegisterActivity : AppCompatActivity()  {
 
         val intent = Intent(this, StartupActivity::class.java)
         startActivity(intent);
+        finish()
 
         return super.onOptionsItemSelected(item)
     }

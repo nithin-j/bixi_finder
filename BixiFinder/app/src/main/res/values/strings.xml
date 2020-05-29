@@ -31,7 +31,7 @@
     </string-array>
 
     <string name="menu_manage_account">Manage Account</string>
-    <string name="menu_update_pass">Update Pass</string>
+    <string name="menu_update_pass">Purchase Access Pass</string>
     <string name="menu_terms_of_use">Terms of use</string>
     <string name="menu_learn_more_about_bixi">Learn more about Bixi</string>
     <string name="menu_rate_bixifinder">Rate BixiFinder</string>
@@ -44,6 +44,10 @@
     <string name="string_update_details">Update Details</string>
     <string name="string_access_pass">Access Pass</string>
     <string name="string_gender">Gender</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="string_male">Male</string>
 
 
 </resources>

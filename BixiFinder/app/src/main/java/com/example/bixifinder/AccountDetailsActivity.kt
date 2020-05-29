@@ -28,27 +28,8 @@ class AccountDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account_details)
 
-        initializeSpinner()
+
         initialize()
-    }
-
-    private fun initializeSpinner() {
-        val gender = arrayOf("Male","Female", "Other")
-        val type = arrayOf("\$2.99: One Way Pass",
-                           "\$5.25: One DayPass",
-                           "\$97: One Year Pass",
-                           "\$36: One Month Pass")
-        val genderSpinner = ArrayAdapter<String>(
-            this,R.layout.custom_spinner_item,gender
-        )
-        genderSpinner.setDropDownViewResource(R.layout.custom_spinner_item)
-        spinner_gender.adapter = genderSpinner
-
-        val typeSpinner = ArrayAdapter<String>(
-            this,R.layout.custom_spinner_item,type
-        )
-        typeSpinner.setDropDownViewResource(R.layout.custom_spinner_item)
-        spinner_member_type.adapter = typeSpinner
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -58,6 +39,8 @@ class AccountDetailsActivity : AppCompatActivity() {
         supportActionBar?.title = "Account Details"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
+
+        rdo_btn_male.isChecked = true
 
         button_register.setOnClickListener {
             registerNewUser()
@@ -94,39 +77,23 @@ class AccountDetailsActivity : AppCompatActivity() {
         }
 
         val database = FirebaseDatabase.getInstance()
-        val id = database.getReference("AccountDetails").push().key.toString()
 
+        val id = database.getReference("AccountDetails").push().key.toString()
         val name = et_user_full_name.text.toString()
         val address = et_user_address.text.toString()
         val zip = et_user_zipcode.text.toString()
         val dob = et_user_dob.text.toString()
-        val gender = spinner_gender.selectedItem.toString()
-        val type = spinner_member_type.selectedItem.toString()
-        val date = LocalDate.now().toString()
+        var gender: String? = null
 
+        if (rdo_btn_male.isChecked)
+            gender = rdo_btn_male.text.toString()
+        else
+            gender = rdo_btn_female.text.toString()
 
-        val calender = Calendar.getInstance()
-        calender.time = Date.valueOf(date)
-
-        when (spinner_member_type.selectedItemId.toString()){
-            "0" ->
-                calender.add(Calendar.DATE,0).toString()
-            "1" ->
-                calender.add(Calendar.DATE, 1).toString()
-            "2" ->
-                calender.add(Calendar.DATE, 365).toString()
-            "3" ->
-                calender.add(Calendar.DATE, 30).toString()
-        }
-
-        val dateFormatter = SimpleDateFormat("yyyy-MM-dd")
-        val validUpTo: String = dateFormatter.format(calender.time).toString()
-
-
-        val users = AccountDetails(id, name, address, zip, dob, gender, type, "Valid", date, validUpTo)
+        val users = AccountDetails(id, name, address, zip, dob, gender.toString(), "N/A", "Invalid", "N/A", "N/A")
         userReference.setValue(users)
 
-        val intent = Intent(this, LoginActivity::class.java)
+        val intent = Intent(this, PurchasePassActivity::class.java)
         intent.putExtra("layout", "account")
         startActivity(intent)
         finish()
@@ -136,6 +103,8 @@ class AccountDetailsActivity : AppCompatActivity() {
 
         val intent = Intent(this, RegisterActivity::class.java)
         startActivity(intent);
+        finish()
+
         return super.onOptionsItemSelected(item)
     }
 }

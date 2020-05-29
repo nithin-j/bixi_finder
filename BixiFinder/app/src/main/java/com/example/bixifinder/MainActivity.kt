@@ -1,5 +1,6 @@
 package com.example.bixifinder
 
+import android.accounts.Account
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.AsyncTask
@@ -13,6 +14,9 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.example.bixifinder.dbContext.AccountDetails
 import com.example.bixifinder.model.BixiStationInfo
 import com.example.bixifinder.model.BixiStationStatus
@@ -58,8 +62,6 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
 
     private var permissionsManager: PermissionsManager = PermissionsManager(this)
     private lateinit var mapboxMap: MapboxMap
-
-
 
     //to set the map boundries
     private val BOUND_CORNER_NW = LatLng(45.86352447, -73.65357972)
@@ -196,6 +198,10 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
                         currentHeader.tv_pass_validity.text = "Bixi access is valid up to ${userDetails?.validUpTo}"
                     else
                         currentHeader.tv_pass_validity.text = "Bixi access expired on ${userDetails?.validUpTo}"
+                    if (userDetails?.gender?.toLowerCase().equals("male"))
+                        currentHeader.header_imgv.setImageResource(R.drawable.male_avatar)
+                    else
+                        currentHeader.header_imgv.setImageResource(R.drawable.female_avatar)
                 }
             }
             userReference.addListenerForSingleValueEvent(userListener)
@@ -459,9 +465,21 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
                 val intent = Intent(this, ManageAccountActivity::class.java)
                 intent.putExtra("layout","main")
                 startActivity(intent)
+                finish()
             }
-            R.id.menu_update_pass ->
-                Toast.makeText(this, "Update pass will appear here", Toast.LENGTH_SHORT).show()
+            R.id.menu_update_pass ->{
+                val validity = checkPassValidity()
+                if (validity){
+                    Snackbar.make(findViewById(android.R.id.content), "You still have a valid access pass", Snackbar.LENGTH_SHORT)
+                        .show();
+                }
+                else{
+                    val intent = Intent(this, PurchasePassActivity::class.java)
+                    intent.putExtra("layout", "main")
+                    startActivity(intent)
+                    finish()
+                }
+            }
             R.id.menu_terms ->
                 Toast.makeText(this, "Terms of use will appear here", Toast.LENGTH_SHORT).show()
             R.id.menu_learn ->
@@ -475,6 +493,7 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
                     val intent = Intent(this, LoginActivity::class.java)
                     intent.putExtra("layout","main")
                     startActivity(intent)
+                    finish()
                 }
             R.id.menu_logout ->
                 if( user?.uid != null){
@@ -482,11 +501,41 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
                     val intent = Intent(this, MainActivityLoader::class.java)
                     intent.putExtra("layout","main")
                     startActivity(intent)
+                    finish()
                 }
         }
     drawer_layout.closeDrawer(Gravity.LEFT)
 
     return true
+    }
+
+    private fun checkPassValidity(): Boolean {
+        val user = FirebaseAuth.getInstance().currentUser
+        var userDetails: AccountDetails? = null
+        if (user != null){
+            val userReference = FirebaseDatabase.getInstance().getReference(user?.uid.toString()).child("AccountDetails")
+
+            val userListener = object : ValueEventListener{
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+                    userDetails = p0.getValue(AccountDetails::class.java)
+                    if (userDetails?.membershipStatus?.toLowerCase() == "valid")
+                        validity.text = "valid"
+                    else
+                        validity.text = "invalid"
+                }
+            }
+            userReference.addListenerForSingleValueEvent(userListener)
+
+        }
+
+        if (validity.text == "valid")
+            return true
+
+        return false
     }
 
 
