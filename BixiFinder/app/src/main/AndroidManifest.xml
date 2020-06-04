@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoTitleBar">
-        <activity android:name=".PurchasePassActivity"></activity>
+        <activity android:name=".BixiDetailsActivity"></activity>
+        <activity android:name=".PurchasePassActivity" />
         <activity android:name=".ManageAccountActivity" />
         <activity android:name=".MainActivityLoader" />
         <activity

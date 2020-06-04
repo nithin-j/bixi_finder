@@ -12,6 +12,7 @@ import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +20,7 @@ import androidx.core.content.ContextCompat
 import com.example.bixifinder.dbContext.AccountDetails
 import com.example.bixifinder.model.BixiStationInfo
 import com.example.bixifinder.model.BixiStationStatus
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -124,7 +126,6 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
                 )
             )
             snackbar.setAction(R.string.try_again) {
-                //recheck internet connection and call DownloadJson if there is internet
             }.show()
         }
 
@@ -228,8 +229,10 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
                     currentHeader.tv_user_full_name.text = userDetails?.name
                     if (userDetails?.membershipStatus?.toLowerCase().equals("valid"))
                         currentHeader.tv_pass_validity.text = "Bixi access is valid up to ${userDetails?.validUpTo}"
-                    else
+                    else if (userDetails?.membershipStatus?.toLowerCase().equals("invalid"))
                         currentHeader.tv_pass_validity.text = "Bixi access expired on ${userDetails?.validUpTo}"
+                    else
+                        currentHeader.tv_pass_validity.text = "Please purchase an access pass to enjoy your first ride"
                     if (userDetails?.gender?.toLowerCase().equals("male"))
                         currentHeader.header_imgv.setImageResource(R.drawable.male_avatar)
                     else
@@ -340,26 +343,66 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
                     )
                 )
 
+
+
                 i++
             }
             i = 0
             while (i<listOfStations.size){
-                var markerTitle = "Name: ${listOfStations[i].name}\n" +
-                        "Station ID: ${listOfBixis[i].station_id}\n" +
-                        "Number of Bikes: ${listOfBixis[i].num_bikes_available}\n" +
-                        "Number of E-Bikes: ${listOfBixis[i].num_ebikes_available}\n" +
-                        "Number of Free Docks: ${listOfBixis[i].num_docks_available}"
+                var markerTitle = listOfStations[i].stationId.toString()
+
                 try {
                     mapboxMap.addMarker(
                         MarkerOptions().
                         position(LatLng(listOfStations[i].latitude,listOfStations[i].longitude)).
                         title(markerTitle)
                     )
+
+
                     i++
                 }catch (exception: Exception){
                     Toast.makeText(this@MainActivity,"There was an unknown error\nPlease contact support",Toast.LENGTH_SHORT).show()
                 }
 
+            }
+
+            mapboxMap.setOnMarkerClickListener {
+
+                try {
+                    val id = it.title.toInt()
+                    var station_name: String = ""
+                    var num_bikes: Int = 0
+                    var num_ebikes: Int = 0
+                    var num_docks: Int = 0
+
+                    var j = 0
+
+                    while (j<listOfStations.size){
+
+                        if (id == listOfStations[j].stationId){
+                            station_name = listOfStations[j].name
+                            num_bikes = listOfBixis[j].num_bikes_available
+                            num_ebikes = listOfBixis[j].num_ebikes_available
+                            num_docks = listOfBixis[j].num_docks_available
+
+                            val intent = Intent(this@MainActivity, BixiDetailsActivity::class.java)
+                            intent.putExtra("station_name",station_name)
+                            intent.putExtra("num_bikes", num_bikes)
+                            intent.putExtra("num_ebikes", num_ebikes)
+                            intent.putExtra("num_docks", num_docks)
+                            startActivity(intent)
+                            finish()
+                        }
+                        j++
+                    }
+                }catch (e: IndexOutOfBoundsException){
+                    Toast.makeText(this@MainActivity, "Unexpected Error: ${listOfStations.size}", Toast.LENGTH_SHORT).show()
+                }
+                catch (e: Exception){
+                Toast.makeText(this@MainActivity, "Unexpected Error", Toast.LENGTH_SHORT).show()
+                }
+
+                return@setOnMarkerClickListener true
             }
 
 
@@ -376,31 +419,7 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
             showBoundArea(it)
             showCrossHair()
             enableLocationComponent(it)
-            mapboxMap.setOnMarkerClickListener {
 
-                val snackbar = Snackbar.make(
-                    findViewById(android.R.id.content),
-                    it.title,
-                    Snackbar.LENGTH_SHORT
-                )
-                snackbar.setActionTextColor(
-                    ContextCompat.getColor(
-                        applicationContext,
-                        R.color.accent
-                    )
-                )
-                snackbar.setBackgroundTint(
-                    ContextCompat.getColor(
-                        applicationContext,
-                        R.color.primary_light
-                    )
-                )
-                snackbar.setAction(it.title) {
-                    Toast.makeText(this,"Bixi Booked",Toast.LENGTH_SHORT).show()
-                }.show()
-
-                return@setOnMarkerClickListener true
-            }
         }
 
     }
