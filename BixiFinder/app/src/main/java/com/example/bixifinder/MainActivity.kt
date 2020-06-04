@@ -1,8 +1,10 @@
 package com.example.bixifinder
 
-import android.accounts.Account
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
@@ -14,13 +16,9 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import com.example.bixifinder.dbContext.AccountDetails
 import com.example.bixifinder.model.BixiStationInfo
 import com.example.bixifinder.model.BixiStationStatus
-import com.google.android.material.internal.ContextUtils.getActivity
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -29,13 +27,11 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.gson.JsonObject
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.geojson.Point
 import com.mapbox.geojson.Polygon
 import com.mapbox.mapboxsdk.Mapbox
-import com.mapbox.mapboxsdk.annotations.Marker
 import com.mapbox.mapboxsdk.annotations.MarkerOptions
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.geometry.LatLngBounds
@@ -75,15 +71,19 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
     private val outerPoints:List<Point> = mutableListOf()
 
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Mapbox.getInstance(applicationContext,getString(R.string.mapbox_access_token))
         setContentView(R.layout.activity_main)
 
-        mapView.onCreate(savedInstanceState)
-        mapView.getMapAsync(this)
 
-        updateMembershipStatus()
+        if (validConnection()){
+
+            mapView.onCreate(savedInstanceState)
+            mapView.getMapAsync(this)
+
+            updateMembershipStatus()
 
         fab_dark.setOnClickListener {
             mapboxMap.setStyle(Style.TRAFFIC_NIGHT)
@@ -98,16 +98,36 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
                 .show();
         }
 
-        val stationInfoUrl = "https://api-core.bixi.com/gbfs/en/station_information.json"
-        val stationStatusUrl = "https://api-core.bixi.com/gbfs/en/station_status.json"
         //val url = "https://api-core.bixi.com/gbfs/gbfs.json"
-        AssyncTaskHandler().execute(stationInfoUrl,stationStatusUrl)
 
-        fabRefresh.setOnClickListener {
-            AssyncTaskHandler().execute(stationInfoUrl, stationStatusUrl)
-            Snackbar.make(it, "Bixis Refreshed", Snackbar.LENGTH_SHORT)
-                .show();
+            val stationInfoUrl = "https://api-core.bixi.com/gbfs/en/station_information.json"
+            val stationStatusUrl = "https://api-core.bixi.com/gbfs/en/station_status.json"
+
+            AssyncTaskHandler().execute(stationInfoUrl,stationStatusUrl)
+
+            fabRefresh.setOnClickListener {
+                AssyncTaskHandler().execute(stationInfoUrl, stationStatusUrl)
+                Snackbar.make(it, "Bixis Refreshed", Snackbar.LENGTH_SHORT)
+                    .show();
+            }
         }
+        else{
+            val snackbar = Snackbar.make(
+                findViewById(android.R.id.content),
+                R.string.try_again,
+                Snackbar.LENGTH_SHORT
+            )
+            snackbar.setActionTextColor(
+                ContextCompat.getColor(
+                    applicationContext,
+                    R.color.accent
+                )
+            )
+            snackbar.setAction(R.string.try_again) {
+                //recheck internet connection and call DownloadJson if there is internet
+            }.show()
+        }
+
 
         manageNavigationDrawer()
 
@@ -116,11 +136,21 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
 
 
 
-
         fabMenu.setOnClickListener {
             drawer_layout.openDrawer(Gravity.LEFT)
         }
 
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun validConnection(): Boolean {
+
+        val cm: ConnectivityManager =
+            this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        val activeNetwork: NetworkInfo = cm.activeNetworkInfo
+        return activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting
     }
 
     private fun updateMembershipStatus() {
@@ -165,6 +195,7 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
             currentMenu.findItem(R.id.menu_update_pass).isVisible = true
             currentMenu.findItem(R.id.menu_rate_bixi).isVisible = true
             currentMenu.findItem(R.id.menu_login).isVisible = false
+            currentMenu.findItem(R.id.menu_Register).isVisible = false
             currentMenu.findItem(R.id.menu_logout).isVisible = true
         }
         else{
@@ -173,6 +204,7 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
             currentMenu.findItem(R.id.menu_update_pass).isVisible = false
             currentMenu.findItem(R.id.menu_rate_bixi).isVisible = false
             currentMenu.findItem(R.id.menu_login).isVisible = true
+            currentMenu.findItem(R.id.menu_Register).isVisible = true
             currentMenu.findItem(R.id.menu_logout).isVisible = false
         }
     }
@@ -344,8 +376,37 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
             showBoundArea(it)
             showCrossHair()
             enableLocationComponent(it)
+            mapboxMap.setOnMarkerClickListener {
+
+                val snackbar = Snackbar.make(
+                    findViewById(android.R.id.content),
+                    it.title,
+                    Snackbar.LENGTH_SHORT
+                )
+                snackbar.setActionTextColor(
+                    ContextCompat.getColor(
+                        applicationContext,
+                        R.color.accent
+                    )
+                )
+                snackbar.setBackgroundTint(
+                    ContextCompat.getColor(
+                        applicationContext,
+                        R.color.primary_light
+                    )
+                )
+                snackbar.setAction(it.title) {
+                    Toast.makeText(this,"Bixi Booked",Toast.LENGTH_SHORT).show()
+                }.show()
+
+                return@setOnMarkerClickListener true
+            }
         }
 
+    }
+
+    private fun test() {
+        TODO("Not yet implemented")
     }
 
     private fun showBoundArea(loadMapStyle: Style) {
@@ -491,6 +552,13 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
             R.id.menu_login ->
                 if( user?.uid == null){
                     val intent = Intent(this, LoginActivity::class.java)
+                    intent.putExtra("layout","main")
+                    startActivity(intent)
+                    finish()
+                }
+            R.id.menu_Register ->
+                if (user?.uid == null){
+                    val intent = Intent(this, RegisterActivity::class.java)
                     intent.putExtra("layout","main")
                     startActivity(intent)
                     finish()

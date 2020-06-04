@@ -1,8 +1,13 @@
-<resources>
-    <string name="app_name">BixiFinder</string>
+<resources
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <string name="app_name" tools:ignore="PrivateResource">BixiFinder</string>
     <string name="app_title">Bixi Finder</string>
     <string name="mapbox_access_token">pk.eyJ1Ijoiam95LW1hcGJveCIsImEiOiJjazl3NzhyNW0wNzFuM2VxajU2ZnAxZ3F2In0.zriMLeOFSGpbb7hnbr_3nA</string>
     <string name="user_location_permission_explanation">Location is required for the application to work properly. Please goto settings and enable location services</string>
+    <string name="try_again">A valid internet connection is required for the application to run smoothly \nPlease verify the network connection amd restart BIXI Finder</string>
+    <string name="ok">OK</string>
 
     <string name="string_email">email</string>
     <string name="string_password">password</string>
@@ -16,19 +21,12 @@
     <string name="string_address">address</string>
     <string name="string_dob">DOB</string>
     <string name="string_pin_code">pin code</string>
-
-    <string-array name="array_gender">
-        <item>Male</item>
-        <item>Female</item>
-        <item>Others</item>
-    </string-array>
-
-    <string-array name="array_membership">
-        <item>$2.99: One Way Pass</item>
-        <item>$5.25: One DayPass</item>
-        <item>$97: One Year Pass</item>
-        <item>$36: One Month Pass</item>
-    </string-array>
+    <string name="string_user_mail">user@mail.com</string>
+    <string name="string_guest_user">Guest User</string>
+    <string name="string_update_details">Update Details</string>
+    <string name="string_access_pass">Access Pass</string>
+    <string name="string_gender">Gender</string>
+    <string name="string_male">Male</string>
 
     <string name="menu_manage_account">Manage Account</string>
     <string name="menu_update_pass">Purchase Access Pass</string>
@@ -39,15 +37,6 @@
     <string name="menu_about">About</string>
     <string name="menu_logout">Logout</string>
     <string name="menu_login">Login</string>
-    <string name="string_user_mail">user@mail.com</string>
-    <string name="string_guest_user">Guest User</string>
-    <string name="string_update_details">Update Details</string>
-    <string name="string_access_pass">Access Pass</string>
-    <string name="string_gender">Gender</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="string_male">Male</string>
-
+    <string name="menu_register">Register</string>
 
 </resources>

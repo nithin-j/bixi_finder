@@ -38,6 +38,11 @@
         app:showAsAction="never"
         android:icon="@drawable/ic_login"/>
     <item
+        android:id="@+id/menu_Register"
+        android:title="@string/menu_register"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_login"/>
+    <item
         android:id="@+id/menu_logout"
         android:title="@string/menu_logout"
         app:showAsAction="never"

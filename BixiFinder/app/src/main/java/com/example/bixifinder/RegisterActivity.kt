@@ -78,9 +78,18 @@ class RegisterActivity : AppCompatActivity()  {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        val intent = Intent(this, StartupActivity::class.java)
-        startActivity(intent);
-        finish()
+        val layout = intent.getStringExtra("layout")
+
+        if (layout.toLowerCase().equals("main")){
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+        else {
+            val intent = Intent(this, StartupActivity::class.java)
+            startActivity(intent);
+            finish()
+        }
 
         return super.onOptionsItemSelected(item)
     }
