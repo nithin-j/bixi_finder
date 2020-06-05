@@ -34,6 +34,7 @@ import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.geojson.Point
 import com.mapbox.geojson.Polygon
 import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.annotations.IconFactory
 import com.mapbox.mapboxsdk.annotations.MarkerOptions
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.geometry.LatLngBounds
@@ -355,6 +356,7 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
                     mapboxMap.addMarker(
                         MarkerOptions().
                         position(LatLng(listOfStations[i].latitude,listOfStations[i].longitude)).
+                        icon(IconFactory.getInstance(baseContext).fromResource(R.drawable.custom_marker)).
                         title(markerTitle)
                     )
 
