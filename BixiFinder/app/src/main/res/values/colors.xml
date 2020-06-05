@@ -14,4 +14,10 @@
     <color name="divider">#BDBDBD</color>
     <color name="white">#ffffff</color>
     <color name="background">#FaF5E6</color>
+
+    //token popup
+    <color name="token_popup_primary_dark">#2F333F</color>
+    <color name="token_popup_primary_light">#49ACD5</color>
+    <color name="token_popup_green">#45BC62</color>
+    <color name="token_popup_orange">#EAAD43</color>
 </resources>

@@ -562,8 +562,11 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
             }
             R.id.menu_terms ->
                 Toast.makeText(this, "Terms of use will appear here", Toast.LENGTH_SHORT).show()
-            R.id.menu_learn ->
-                Toast.makeText(this, "Learn more about bixi", Toast.LENGTH_SHORT).show()
+            R.id.menu_learn ->{
+                val intent = Intent(this, LearnMoreActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
             R.id.menu_rate_bixi ->
                 Toast.makeText(this, "Rate our application here", Toast.LENGTH_SHORT).show()
             R.id.menu_user_ratings ->

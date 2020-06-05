@@ -74,72 +74,84 @@
                         />
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
                         android:layout_gravity="center">
 
-                        <TextView
-                            android:id="@+id/lbl_bikes"
+                        <LinearLayout
                             android:gravity="center"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:paddingHorizontal="17dp"
-                            android:text="0"
-                            android:textAppearance="?attr/textAppearanceHeadline4"
-                            android:textColor="?android:attr/textColorSecondary" />
+                            android:orientation="vertical"
+                            android:layout_weight="2"
+                            android:layout_width="0dp"
+                            android:layout_height="100dp">
 
-                        <TextView
-                            android:id="@+id/lbl_ebikes"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:paddingHorizontal="17dp"
-                            android:text="99"
-                            android:textAppearance="?attr/textAppearanceHeadline4"
-                            android:textColor="?android:attr/textColorSecondary" />
+                            <TextView
+                                android:id="@+id/lbl_bikes"
+                                android:gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingHorizontal="17dp"
+                                android:text="0"
+                                android:textAppearance="?attr/textAppearanceHeadline3"
+                                android:textColor="@color/secondary_text" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Bikes"
+                                android:textAppearance="?attr/textAppearanceBody1"
+                                android:textColor="@color/secondary_text" />
 
-                        <TextView
-                            android:id="@+id/lbl_docks"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:paddingHorizontal="17dp"
-                            android:text="99"
-                            android:textAppearance="?attr/textAppearanceHeadline4"
-                            android:textColor="?android:attr/textColorSecondary" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:layout_weight="2"
+                            android:layout_width="0dp"
+                            android:layout_height="100dp">
 
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_gravity="center">
+                            <TextView
+                                android:id="@+id/lbl_ebikes"
+                                android:gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingHorizontal="17dp"
+                                android:text="0"
+                                android:textAppearance="?attr/textAppearanceHeadline3"
+                                android:textColor="@color/secondary_text" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="E-Bikes"
+                                android:textAppearance="?attr/textAppearanceBody1"
+                                android:textColor="@color/secondary_text" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingHorizontal="15dp"
-                            android:text="Bikes"
-                            android:textAppearance="?attr/textAppearanceBody2"
-                            android:textColor="?android:attr/textColorSecondary" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:layout_weight="2"
+                            android:layout_width="0dp"
+                            android:layout_height="100dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingHorizontal="15dp"
-                            android:text="E-Bikes"
-                            android:textAppearance="?attr/textAppearanceBody2"
-                            android:textColor="?android:attr/textColorSecondary" />
+                            <TextView
+                                android:id="@+id/lbl_docks"
+                                android:gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingHorizontal="17dp"
+                                android:text="0"
+                                android:textAppearance="?attr/textAppearanceHeadline3"
+                                android:textColor="@color/secondary_text" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Docks"
+                                android:textAppearance="?attr/textAppearanceBody1"
+                                android:textColor="@color/secondary_text" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingHorizontal="15dp"
-                            android:text="Docks"
-                            android:textAppearance="?attr/textAppearanceBody2"
-                            android:textColor="?android:attr/textColorSecondary" />
+                        </LinearLayout>
+
 
                     </LinearLayout>
 

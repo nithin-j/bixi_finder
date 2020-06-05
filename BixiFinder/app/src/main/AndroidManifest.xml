@@ -9,17 +9,14 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:icon="@mipmap/ic_bixi_finder"
+        android:label="@string/app_title"
+        android:roundIcon="@mipmap/ic_bixi_finder_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoTitleBar">
-        <activity android:name=".BixiDetailsActivity"></activity>
-        <activity android:name=".PurchasePassActivity" />
-        <activity android:name=".ManageAccountActivity" />
-        <activity android:name=".MainActivityLoader" />
         <activity
-            android:name=".StartupActivity"
+            android:name=".SplashScreenActivity"
+            android:noHistory="true"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
@@ -28,6 +25,30 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".LearnMoreActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".BixiDetailsActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".PurchasePassActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ManageAccountActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".MainActivityLoader"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".StartupActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
         <activity
             android:name=".AccountDetailsActivity"
             android:screenOrientation="portrait"

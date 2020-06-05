@@ -129,7 +129,6 @@ class PurchasePassActivity : AppCompatActivity() {
 
             Snackbar.make(findViewById(android.R.id.content), "BIXI Access Pass updated successfully", Snackbar.LENGTH_SHORT).show();
             val intent = Intent(this, MainActivity::class.java)
-            intent.putExtra("layout","pass")
             startActivity(intent)
             finish()
         }
@@ -137,7 +136,7 @@ class PurchasePassActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val layout = intent.getStringExtra("layout")
-        if (layout.equals("main")){
+        if (layout == "main"){
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
