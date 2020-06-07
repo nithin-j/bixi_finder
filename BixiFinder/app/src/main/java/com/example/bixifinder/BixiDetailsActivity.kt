@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.view.isVisible
 import com.example.bixifinder.dbContext.AccountDetails
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -80,6 +81,7 @@ class BixiDetailsActivity : AppCompatActivity() {
         val ebike_count = intent.getIntExtra("num_ebikes",0)
         val dock_count = intent.getIntExtra("num_docks",0)
 
+
         setSupportActionBar(main_toolbar)
 
         supportActionBar?.title = "BIXI Details"
@@ -110,11 +112,11 @@ class BixiDetailsActivity : AppCompatActivity() {
 
                     @RequiresApi(Build.VERSION_CODES.O)
                     override fun onDataChange(p0: DataSnapshot) {
-                        var userDetails = p0.getValue(AccountDetails::class.java)
+                        val userDetails = p0.getValue(AccountDetails::class.java)
                         if (userDetails?.membershipType == "One Way"){
 
-                            var dateFormatter = SimpleDateFormat("yyyy-MM-dd")
-                            var today = LocalDate.now().toString()
+                            val dateFormatter = SimpleDateFormat("yyyy-MM-dd")
+                            val today = LocalDate.now().toString()
                             val calender = Calendar.getInstance()
                             calender.time = Date.valueOf(today)
                             calender.add(Calendar.DATE,-1)

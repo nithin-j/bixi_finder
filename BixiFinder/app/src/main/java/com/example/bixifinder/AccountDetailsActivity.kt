@@ -85,10 +85,10 @@ class AccountDetailsActivity : AppCompatActivity() {
         val dob = et_user_dob.text.toString()
         var gender: String? = null
 
-        if (rdo_btn_male.isChecked)
-            gender = rdo_btn_male.text.toString()
+        gender = if (rdo_btn_male.isChecked)
+            rdo_btn_male.text.toString()
         else
-            gender = rdo_btn_female.text.toString()
+            rdo_btn_female.text.toString()
 
         val users = AccountDetails(id, name, address, zip, dob, gender.toString(), "N/A", "Invalid", "N/A", "N/A")
         userReference.setValue(users)

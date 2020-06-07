@@ -1,8 +1,10 @@
 package com.example.bixifinder
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Icon
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.AsyncTask
@@ -11,18 +13,18 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
-import android.widget.FrameLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.bixifinder.dbContext.AccountDetails
+import com.example.bixifinder.dbContext.UserRatings
 import com.example.bixifinder.model.BixiStationInfo
 import com.example.bixifinder.model.BixiStationStatus
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
@@ -49,6 +51,7 @@ import com.mapbox.mapboxsdk.style.layers.FillLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.navigation_header.view.*
+import kotlinx.android.synthetic.main.ratings_dialog.*
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
@@ -353,10 +356,13 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
                 var markerTitle = listOfStations[i].stationId.toString()
 
                 try {
+                    var markerIcon =IconFactory.getInstance(baseContext).fromResource(R.drawable.classic_marker)
+                    if (listOfBixis[i].num_ebikes_available != 0)
+                        markerIcon = IconFactory.getInstance(baseContext).fromResource(R.drawable.electric_marker)
                     mapboxMap.addMarker(
                         MarkerOptions().
                         position(LatLng(listOfStations[i].latitude,listOfStations[i].longitude)).
-                        icon(IconFactory.getInstance(baseContext).fromResource(R.drawable.custom_marker)).
+                        icon(markerIcon).
                         title(markerTitle)
                     )
 
@@ -424,10 +430,6 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
 
         }
 
-    }
-
-    private fun test() {
-        TODO("Not yet implemented")
     }
 
     private fun showBoundArea(loadMapStyle: Style) {
@@ -570,7 +572,9 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
                 finish()
             }
             R.id.menu_rate_bixi ->
-                Toast.makeText(this, "Rate our application here", Toast.LENGTH_SHORT).show()
+                if (user != null){
+                    addUserRatings()
+                }
             R.id.menu_user_ratings ->
                 Toast.makeText(this, "Users can rate bixi finder here", Toast.LENGTH_SHORT).show()
             R.id.menu_login ->
@@ -599,6 +603,52 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
     drawer_layout.closeDrawer(Gravity.LEFT)
 
     return true
+    }
+
+    private fun addUserRatings() {
+        val ratingDialog = Dialog(this)
+        val user = FirebaseAuth.getInstance().currentUser
+
+        val ratingReference = FirebaseDatabase.getInstance().getReference("UserRatings").child(user?.uid.toString())
+
+
+        ratingDialog.setContentView(R.layout.ratings_dialog)
+        val close = ratingDialog.findViewById<TextView>(R.id.txt_rating_close)
+        close.setOnClickListener {
+            ratingDialog.dismiss()
+        }
+        val ratingBarAddRating = ratingDialog.findViewById<RatingBar>(R.id.ratingBarAddRating)
+        val txtUserRating  = ratingDialog.findViewById<TextView>(R.id.txt_user_rating)
+        ratingBarAddRating.onRatingBarChangeListener =
+            RatingBar.OnRatingBarChangeListener { _, rating, _ -> txtUserRating.text = rating.toString() }
+
+        val buttonAddRatings = ratingDialog.findViewById<Button>(R.id.button_add_ratings)
+        buttonAddRatings.setOnClickListener {
+
+
+            if(user != null){
+
+
+                val etAddRatingTitle = ratingDialog.findViewById<TextInputEditText>(R.id.et_add_rating_title).text.toString()
+                val etAddRatingReview = ratingDialog.findViewById<TextInputEditText>(R.id.et_add_rating_review).text.toString()
+
+                val database = FirebaseDatabase.getInstance()
+
+                val id = database.getReference("UserRatings").push().key.toString()
+                val userEmail = user.email.toString()
+                val userRating = txtUserRating.text.toString().toDouble()
+
+                val review = UserRatings(id,userEmail,userRating,etAddRatingTitle,etAddRatingReview)
+                ratingReference.setValue(review)
+
+                Snackbar.make(findViewById(android.R.id.content), "Review added successfully", Snackbar.LENGTH_SHORT)
+                    .show();
+                ratingDialog.dismiss()
+            }
+        }
+
+
+        ratingDialog.show()
     }
 
     private fun checkPassValidity(): Boolean {

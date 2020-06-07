@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.gridlayout.widget.GridLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="340dp"
+    android:layout_height="wrap_content"
+    android:background="@color/token_popup_primary_dark"
+    android:padding="5dp"
+    android:layout_gravity="center">
+
+    <TextView
+        android:id="@+id/txt_rating_close"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:textColor="@color/white"
+        android:text="X"
+        app:layout_row="0"
+        android:textStyle="bold"
+        app:layout_gravity="end"
+        android:gravity="center"
+        android:background="@drawable/circle_background"
+        android:layout_marginBottom="15dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        app:layout_row="1"
+        app:layout_column="0">
+        <RatingBar
+            android:id="@+id/ratingBarAddRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:stepSize="0.25"
+            android:numStars="5"
+            android:rating="4.50"
+            android:backgroundTint="@color/white"
+            android:layout_margin="15dp" />
+
+        <TextView
+            android:id="@+id/txt_user_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="4.50"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="title"
+        app:hintTextColor="@color/white"
+        app:boxStrokeColor="@color/white"
+        app:layout_column="0"
+        app:layout_row="2"
+        android:layout_margin="15dp"
+        app:boxBackgroundColor="@color/token_popup_primary_dark">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_add_rating_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="pleae enter your review"
+        app:hintTextColor="@color/white"
+        app:boxStrokeColor="@color/white"
+        app:boxStrokeWidth="2dp"
+        app:boxBackgroundColor="@color/token_popup_primary_dark"
+        app:layout_column="0"
+        app:layout_row="3"
+        android:layout_margin="15dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_add_rating_review"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top|start"
+            android:inputType="textMultiLine"
+            android:maxLines="5"
+            android:minLines="4"
+            android:textColor="@color/white"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/button_add_ratings"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="Rate"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:cornerRadius="10dp"
+        app:layout_column="0"
+        app:layout_gravity="center"
+        app:layout_row="5"
+        app:strokeColor="@color/white"/>
+
+</androidx.gridlayout.widget.GridLayout>
