@@ -17,7 +17,14 @@
         mapbox:menu="@menu/navigation_menu"/>
 
     <TextView
+        android:visibility="invisible"
         android:id="@+id/validity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:visibility="invisible"
+        android:id="@+id/users_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 

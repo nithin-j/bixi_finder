@@ -58,6 +58,8 @@ import java.net.URL
 import java.sql.Date
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback,
     NavigationView.OnNavigationItemSelectedListener{
@@ -171,11 +173,15 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
                 @SuppressLint("SimpleDateFormat")
                 @RequiresApi(Build.VERSION_CODES.O)
                 override fun onDataChange(p0: DataSnapshot) {
+
                     var userDetails = p0.getValue(AccountDetails::class.java)
                     var dateFormatter = SimpleDateFormat("yyyy-MM-dd")
-                    var today = dateFormatter.format(Date.valueOf(LocalDate.now().toString()))//SimpleDateFormat("yyyy-MM-dd").parse(LocalDate.now().toString())
-                    var validTo = dateFormatter.format(Date.valueOf(userDetails?.validUpTo)) //SimpleDateFormat("yyyy-MM-dd").parse(userDetails?.validUpTo.toString())
+                    var today = dateFormatter.format(Date.valueOf(LocalDate.now().toString()))
+                    var validTo =  if (userDetails?.validUpTo == "N/A") "N/A" else dateFormatter.format(Date.valueOf(userDetails?.validUpTo)).toString()
 
+
+                    if(validTo == "N/A")
+                        userReference.child("membershipStatus").setValue("N/A")
                     if (validTo < today)
                         userReference.child("membershipStatus").setValue("Invalid")
                     else
@@ -573,10 +579,29 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
             }
             R.id.menu_rate_bixi ->
                 if (user != null){
+                    var userDetailsObj : AccountDetails? = null
+                    val uid = user?.uid.toString()
+                    val userReference = FirebaseDatabase.getInstance().getReference(uid).child("AccountDetails")
+                    val userListener = object: ValueEventListener{
+                        override fun onCancelled(p0: DatabaseError) {
+
+                        }
+
+                        override fun onDataChange(p0: DataSnapshot) {
+                            userDetailsObj = p0.getValue(AccountDetails::class.java)
+                            users_name.text = userDetailsObj?.name.toString()
+                        }
+
+                    }
+                    userReference.addListenerForSingleValueEvent(userListener)
+
                     addUserRatings()
                 }
-            R.id.menu_user_ratings ->
-                Toast.makeText(this, "Users can rate bixi finder here", Toast.LENGTH_SHORT).show()
+            R.id.menu_user_ratings ->{
+                val intent = Intent(this, ViewUserRatingsActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
             R.id.menu_login ->
                 if( user?.uid == null){
                     val intent = Intent(this, LoginActivity::class.java)
@@ -625,26 +650,23 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
         val buttonAddRatings = ratingDialog.findViewById<Button>(R.id.button_add_ratings)
         buttonAddRatings.setOnClickListener {
 
+            val etAddRatingTitle = ratingDialog.findViewById<TextInputEditText>(R.id.et_add_rating_title).text.toString()
+            val etAddRatingReview = ratingDialog.findViewById<TextInputEditText>(R.id.et_add_rating_review).text.toString()
 
-            if(user != null){
+            val database = FirebaseDatabase.getInstance()
 
+            val id = database.getReference("UserRatings").push().key.toString()
+            val name = users_name.text.toString()
+            val userEmail = user?.email.toString()
+            val userRating = txtUserRating.text.toString().toInt()
 
-                val etAddRatingTitle = ratingDialog.findViewById<TextInputEditText>(R.id.et_add_rating_title).text.toString()
-                val etAddRatingReview = ratingDialog.findViewById<TextInputEditText>(R.id.et_add_rating_review).text.toString()
+            val review = UserRatings(id,name,userEmail,userRating,etAddRatingTitle,etAddRatingReview)
+            ratingReference.setValue(review)
 
-                val database = FirebaseDatabase.getInstance()
+            Snackbar.make(findViewById(android.R.id.content), "Thanks for the review", Snackbar.LENGTH_SHORT)
+                .show();
+            ratingDialog.dismiss()
 
-                val id = database.getReference("UserRatings").push().key.toString()
-                val userEmail = user.email.toString()
-                val userRating = txtUserRating.text.toString().toDouble()
-
-                val review = UserRatings(id,userEmail,userRating,etAddRatingTitle,etAddRatingReview)
-                ratingReference.setValue(review)
-
-                Snackbar.make(findViewById(android.R.id.content), "Review added successfully", Snackbar.LENGTH_SHORT)
-                    .show();
-                ratingDialog.dismiss()
-            }
         }
 
 

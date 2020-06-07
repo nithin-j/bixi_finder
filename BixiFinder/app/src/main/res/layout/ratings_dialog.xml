@@ -31,22 +31,22 @@
             android:id="@+id/ratingBarAddRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:stepSize="0.25"
+            android:stepSize="1"
             android:numStars="5"
-            android:rating="4.50"
+            android:rating="4"
             android:backgroundTint="@color/white"
             android:layout_margin="15dp" />
 
         <TextView
             android:id="@+id/txt_user_rating"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="4.50"
+            android:text="4"
             android:textColor="@color/white"
             android:textStyle="bold"
             android:gravity="center"
-            android:textSize="20sp"/>
+            android:textSize="20sp" />
 
     </LinearLayout>
 
