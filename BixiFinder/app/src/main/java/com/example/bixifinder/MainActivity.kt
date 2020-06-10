@@ -362,9 +362,10 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
                 var markerTitle = listOfStations[i].stationId.toString()
 
                 try {
-                    var markerIcon =IconFactory.getInstance(baseContext).fromResource(R.drawable.classic_marker)
+                    var markerIcon =IconFactory.getInstance(baseContext).fromResource(R.drawable.map_marker_classic)
+
                     if (listOfBixis[i].num_ebikes_available != 0)
-                        markerIcon = IconFactory.getInstance(baseContext).fromResource(R.drawable.electric_marker)
+                        markerIcon =IconFactory.getInstance(baseContext).fromResource(R.drawable.map_marker_electric)
                     mapboxMap.addMarker(
                         MarkerOptions().
                         position(LatLng(listOfStations[i].latitude,listOfStations[i].longitude)).
@@ -547,6 +548,7 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
         mapView.onSaveInstanceState(outState)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val user = FirebaseAuth.getInstance().currentUser
 
@@ -630,6 +632,8 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
     return true
     }
 
+    @SuppressLint("SimpleDateFormat")
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun addUserRatings() {
         val ratingDialog = Dialog(this)
         val user = FirebaseAuth.getInstance().currentUser
@@ -658,9 +662,15 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
             val id = database.getReference("UserRatings").push().key.toString()
             val name = users_name.text.toString()
             val userEmail = user?.email.toString()
-            val userRating = txtUserRating.text.toString().toInt()
+            val userRating = txtUserRating.text.toString().toDouble()
 
-            val review = UserRatings(id,name,userEmail,userRating,etAddRatingTitle,etAddRatingReview)
+
+            val calender = Calendar.getInstance()
+            calender.time = Date.valueOf(LocalDate.now().toString())
+            val dateFormatter = SimpleDateFormat("MMM dd yyyy")
+            val reviewDate: String = dateFormatter.format(calender.time).toString()
+
+            val review = UserRatings(id,name,userEmail,userRating.toInt(),etAddRatingTitle,etAddRatingReview, reviewDate)
             ratingReference.setValue(review)
 
             Snackbar.make(findViewById(android.R.id.content), "Thanks for the review", Snackbar.LENGTH_SHORT)
@@ -668,7 +678,6 @@ class MainActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallbac
             ratingDialog.dismiss()
 
         }
-
 
         ratingDialog.show()
     }

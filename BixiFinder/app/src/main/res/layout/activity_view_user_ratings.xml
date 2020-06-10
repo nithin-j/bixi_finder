@@ -4,28 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ViewUserRatingsActivity">
+    tools:context=".ViewUserRatingsActivity"
+    android:background="#767a77">
 
 
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/layout_grid"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayout3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/primary_dark"
+            android:backgroundTint="#767a77"
+            app:layout_column="0"
             app:layout_constraintTop_toBottomOf="@id/layout_grid"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_row="0"
-            app:layout_column="0"
             app:liftOnScroll="true">
 
             <androidx.appcompat.widget.Toolbar
@@ -36,45 +36,46 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <LinearLayout
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            app:layout_row="1"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
             app:layout_column="0"
-            android:orientation="horizontal">
+            app:layout_row="1">
 
             <LinearLayout
-                android:gravity="center"
-                android:orientation="vertical"
-                android:layout_weight=".7"
                 android:layout_width="0dp"
-                android:layout_height="100dp">
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/lbl_overall_ratings"
-                    android:gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:paddingHorizontal="17dp"
                     android:text="4.5"
                     android:textAppearance="?attr/textAppearanceHeadline3"
-                    android:textColor="@color/secondary_text" />
+                    android:textColor="@color/white" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="out of 5"
                     android:textAppearance="?attr/textAppearanceBody1"
-                    android:textColor="@color/secondary_text" />
+                    android:textColor="@color/white" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/bikes_layout"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:layout_weight="2"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
-                android:layout_marginEnd="15dp">
+                android:layout_marginEnd="15dp"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -84,31 +85,38 @@
                     <ImageView
                         android:layout_width="10dp"
                         android:layout_height="10dp"
-                        android:src="@drawable/rating_star"/>
+                        android:src="@drawable/rating_star" />
+
                     <ImageView
                         android:layout_width="10dp"
                         android:layout_height="10dp"
-                        android:src="@drawable/rating_star"/>
+                        android:src="@drawable/rating_star" />
+
                     <ImageView
                         android:layout_width="10dp"
                         android:layout_height="10dp"
-                        android:src="@drawable/rating_star"/>
+                        android:src="@drawable/rating_star" />
+
                     <ImageView
                         android:layout_width="10dp"
                         android:layout_height="10dp"
-                        android:src="@drawable/rating_star"/>
+                        android:src="@drawable/rating_star" />
+
                     <ImageView
                         android:layout_width="10dp"
                         android:layout_height="10dp"
-                        android:src="@drawable/rating_star"/>
+                        android:src="@drawable/rating_star" />
+
                     <ProgressBar
-                        android:layout_marginStart="10dp"
-                        android:progress="35"
+                        android:id="@+id/pb_FiveRating"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:progress="35" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -117,31 +125,38 @@
 
                     <ImageView
                         android:layout_width="10dp"
-                        android:layout_height="10dp"/>
+                        android:layout_height="10dp" />
+
                     <ImageView
                         android:layout_width="10dp"
                         android:layout_height="10dp"
-                        android:src="@drawable/rating_star"/>
+                        android:src="@drawable/rating_star" />
+
                     <ImageView
                         android:layout_width="10dp"
                         android:layout_height="10dp"
-                        android:src="@drawable/rating_star"/>
+                        android:src="@drawable/rating_star" />
+
                     <ImageView
                         android:layout_width="10dp"
                         android:layout_height="10dp"
-                        android:src="@drawable/rating_star"/>
+                        android:src="@drawable/rating_star" />
+
                     <ImageView
                         android:layout_width="10dp"
                         android:layout_height="10dp"
-                        android:src="@drawable/rating_star"/>
+                        android:src="@drawable/rating_star" />
+
                     <ProgressBar
-                        android:layout_marginStart="10dp"
-                        android:progress="55"
+                        android:id="@+id/pb_FourRating"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:progress="55" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -150,30 +165,37 @@
 
                     <ImageView
                         android:layout_width="10dp"
-                        android:layout_height="10dp"/>
+                        android:layout_height="10dp" />
+
                     <ImageView
                         android:layout_width="10dp"
-                        android:layout_height="10dp"/>
-                    <ImageView
-                        android:layout_width="10dp"
-                        android:layout_height="10dp"
-                        android:src="@drawable/rating_star"/>
-                    <ImageView
-                        android:layout_width="10dp"
-                        android:layout_height="10dp"
-                        android:src="@drawable/rating_star"/>
+                        android:layout_height="10dp" />
+
                     <ImageView
                         android:layout_width="10dp"
                         android:layout_height="10dp"
-                        android:src="@drawable/rating_star"/>
+                        android:src="@drawable/rating_star" />
+
+                    <ImageView
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:src="@drawable/rating_star" />
+
+                    <ImageView
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:src="@drawable/rating_star" />
+
                     <ProgressBar
-                        android:layout_marginStart="10dp"
-                        android:progress="15"
+                        android:id="@+id/pb_ThreeRating"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:progress="15" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -182,29 +204,36 @@
 
                     <ImageView
                         android:layout_width="10dp"
-                        android:layout_height="10dp"/>
+                        android:layout_height="10dp" />
+
                     <ImageView
                         android:layout_width="10dp"
-                        android:layout_height="10dp"/>
+                        android:layout_height="10dp" />
+
                     <ImageView
                         android:layout_width="10dp"
-                        android:layout_height="10dp"/>
+                        android:layout_height="10dp" />
+
                     <ImageView
                         android:layout_width="10dp"
                         android:layout_height="10dp"
-                        android:src="@drawable/rating_star"/>
+                        android:src="@drawable/rating_star" />
+
                     <ImageView
                         android:layout_width="10dp"
                         android:layout_height="10dp"
-                        android:src="@drawable/rating_star"/>
+                        android:src="@drawable/rating_star" />
+
                     <ProgressBar
-                        android:layout_marginStart="10dp"
-                        android:progress="5"
+                        android:id="@+id/pb_TwoRating"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:progress="5" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -212,39 +241,63 @@
 
                     <ImageView
                         android:layout_width="10dp"
-                        android:layout_height="10dp"/>
+                        android:layout_height="10dp" />
+
                     <ImageView
                         android:layout_width="10dp"
-                        android:layout_height="10dp"/>
+                        android:layout_height="10dp" />
+
                     <ImageView
                         android:layout_width="10dp"
-                        android:layout_height="10dp"/>
+                        android:layout_height="10dp" />
+
                     <ImageView
                         android:layout_width="10dp"
-                        android:layout_height="10dp"/>
+                        android:layout_height="10dp" />
+
                     <ImageView
                         android:layout_width="10dp"
                         android:layout_height="10dp"
-                        android:src="@drawable/rating_star"/>
+                        android:src="@drawable/rating_star" />
+
                     <ProgressBar
-                        android:layout_marginStart="10dp"
-                        android:progress="10"
+                        android:id="@+id/pb_oneRating"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:progress="10" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/lbl_num_ratings"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="total number of ratings"
+                        android:textAppearance="?attr/textAppearanceBody1"
+                        android:textColor="@color/white"
+                        android:gravity="end"/>
                 </LinearLayout>
 
             </LinearLayout>
 
         </LinearLayout>
-        <ListView
-            android:id="@+id/lv_ratings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_row="2"
-            app:layout_column="0"
-            android:backgroundTint="@color/secondary_text"/>
     </androidx.gridlayout.widget.GridLayout>
+
+    <ListView
+        android:id="@+id/lv_ratings"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_grid"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.0"
+        tools:layout_editor_absoluteX="0dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
