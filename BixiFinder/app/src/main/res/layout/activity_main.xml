@@ -56,30 +56,15 @@
                 android:id="@+id/fabMenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:backgroundTint="@color/primary_light"
                 android:src="@drawable/ic_menu_24px"
-                mapbox:fabSize="mini"
 
+                mapbox:fabSize="mini"
                 mapbox:layout_constraintBottom_toBottomOf="parent"
-                mapbox:layout_constraintEnd_toStartOf="@+id/fabSearch"
-                mapbox:layout_constraintHorizontal_bias="0.053"
                 mapbox:layout_constraintStart_toStartOf="parent"
                 mapbox:layout_constraintTop_toTopOf="parent"
-                mapbox:layout_constraintVertical_bias="0.010"
-                mapbox:rippleColor="@color/primary" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fabSearch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:backgroundTint="@color/primary_light"
-                android:src="@drawable/ic_search_24px"
-                mapbox:fabSize="mini"
-                mapbox:layout_constraintBottom_toBottomOf="parent"
-                mapbox:layout_constraintEnd_toEndOf="parent"
-                mapbox:layout_constraintTop_toTopOf="parent"
-                mapbox:layout_constraintVertical_bias="0.103"
+                mapbox:layout_constraintVertical_bias="0.01"
                 mapbox:rippleColor="@color/primary" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -91,9 +76,9 @@
                 mapbox:fabSize="mini"
                 mapbox:layout_constraintBottom_toBottomOf="parent"
                 mapbox:layout_constraintEnd_toEndOf="parent"
-                mapbox:layout_constraintHorizontal_bias="0.946"
-                mapbox:layout_constraintStart_toEndOf="@+id/fabMenu"
-                mapbox:layout_constraintTop_toBottomOf="@+id/fabSearch"
+                mapbox:layout_constraintHorizontal_bias="0.044"
+                mapbox:layout_constraintStart_toStartOf="parent"
+                mapbox:layout_constraintTop_toBottomOf="@+id/fabMenu"
                 mapbox:layout_constraintVertical_bias="0.0"
                 mapbox:rippleColor="@color/primary" />
 
